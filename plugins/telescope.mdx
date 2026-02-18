@@ -1,0 +1,349 @@
+---
+title: 'Telescope'
+description: 'Fuzzy finder for files, text, and more'
+icon: 'magnifying-glass'
+---
+
+## Overview
+
+[Telescope](https://github.com/nvim-telescope/telescope.nvim) is a highly extendable fuzzy finder over lists. It's one of the most essential plugins in nvim-luffy, providing fast searching for files, text content, recent files, and more.
+
+<Note>
+Telescope is the primary way to navigate and search in nvim-luffy. Master these keybindings for maximum productivity!
+</Note>
+
+## Installation
+
+From `lua/leyland/plugins/telescope.lua`:
+
+```lua
+return {
+  "nvim-telescope/telescope.nvim",
+  branch = "0.1.x",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    "nvim-tree/nvim-web-devicons",
+    "folke/todo-comments.nvim",
+  },
+}
+```
+
+### Dependencies
+
+- **plenary.nvim** - Required Lua utility functions
+- **telescope-fzf-native** - Native FZF sorter for better performance (requires `make`)
+- **nvim-web-devicons** - File icons in results
+- **todo-comments.nvim** - Search for TODO comments
+
+## Configuration
+
+### Display Settings
+
+```lua
+telescope.setup({
+  defaults = {
+    path_display = { "filename_first" },
+    mappings = {
+      i = {
+        ["<C-k>"] = actions.move_selection_previous,
+        ["<C-j>"] = actions.move_selection_next,
+        ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+      },
+    },
+  },
+  pickers = {
+    live_grep = {
+      path_display = { "truncate" },
+    },
+  },
+})
+```
+
+<Accordion title="What does filename_first do?">
+By default, Telescope shows the full path with the directory first. `filename_first` displays the filename at the beginning, making it easier to scan results:
+
+- Default: `src/components/Button.tsx`
+- filename_first: `Button.tsx (src/components)`
+</Accordion>
+
+### FZF Extension
+
+```lua
+telescope.load_extension("fzf")
+```
+
+The FZF extension provides native performance for sorting and filtering results.
+
+## Keybindings
+
+All keybindings use `<leader>` (Space) as the prefix:
+
+### File Navigation
+
+| Keybinding | Command | Description |
+|------------|---------|-------------|
+| `<leader><leader>` | `:Telescope find_files` | Find files in current directory |
+| `<leader>fr` | `:Telescope oldfiles` | Find recently opened files |
+
+<CodeGroup>
+```lua Find Files
+vim.keymap.set("n", "<leader><leader>", "<cmd>Telescope find_files<cr>", 
+  { desc = "Fuzzy find files in cwd" }
+)
+```
+
+```lua Recent Files
+vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", 
+  { desc = "Fuzzy find recent files" }
+)
+```
+</CodeGroup>
+
+### Text Search
+
+| Keybinding | Command | Description |
+|------------|---------|-------------|
+| `<leader>/` | `:Telescope live_grep` | Search for text in all files |
+| `<leader>fc` | `:Telescope grep_string` | Search for word under cursor |
+
+<CodeGroup>
+```lua Live Grep
+vim.keymap.set("n", "<leader>/", "<cmd>Telescope live_grep<cr>", 
+  { desc = "Find string in cwd" }
+)
+```
+
+```lua Grep String
+vim.keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", 
+  { desc = "Find string under cursor in cwd" }
+)
+```
+</CodeGroup>
+
+### Special Searches
+
+| Keybinding | Command | Description |
+|------------|---------|-------------|
+| `<leader>ft` | `:TodoTelescope` | Find TODO comments |
+| `<leader>fk` | `:Telescope keymaps` | Search keybindings |
+
+```lua:lua/leyland/plugins/telescope.lua
+keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Find todos" })
+keymap.set("n", "<leader>fk", "<cmd>Telescope keymaps<cr>", { desc = "Find keymaps" })
+```
+
+## Telescope Mappings
+
+Inside Telescope prompt (Insert mode):
+
+### Default Mappings
+
+| Key | Action |
+|-----|--------|
+| `<C-k>` | Move to previous result |
+| `<C-j>` | Move to next result |
+| `<C-q>` | Send selected to quickfix list |
+| `<C-u>` | Scroll preview up |
+| `<C-d>` | Scroll preview down |
+| `<CR>` | Open selected file |
+| `<C-x>` | Open in horizontal split |
+| `<C-v>` | Open in vertical split |
+| `<C-t>` | Open in new tab |
+| `<Esc>` | Close Telescope |
+
+<Warning>
+The custom mappings `<C-k>` and `<C-j>` override Telescope's default scroll mappings for more intuitive navigation.
+</Warning>
+
+## Usage Examples
+
+### Finding Files
+
+<Steps>
+  <Step title="Open Telescope">
+    Press `<Space><Space>` to open file finder
+  </Step>
+  
+  <Step title="Type to Filter">
+    Start typing filename to fuzzy match
+    ```
+    teles  → matches telescope.lua
+    plgns  → matches plugins/
+    ```
+  </Step>
+  
+  <Step title="Navigate Results">
+    Use `<C-j>` / `<C-k>` to move through results
+  </Step>
+  
+  <Step title="Open File">
+    Press `<Enter>` to open in current window
+    
+    Or use:
+    - `<C-x>` for horizontal split
+    - `<C-v>` for vertical split
+    - `<C-t>` for new tab
+  </Step>
+</Steps>
+
+### Searching Text
+
+<Tabs>
+  <Tab title="Live Grep">
+    Press `<Space>/` to search across all files:
+    
+    ```bash
+    # Search for function definitions
+    function setup
+    
+    # Search for TODO comments
+    TODO:
+    
+    # Search for imports
+    require("telescope")
+    ```
+    
+    Live grep updates results as you type!
+  </Tab>
+  
+  <Tab title="Grep String">
+    Place cursor on a word and press `<Space>fc` to find all occurrences:
+    
+    ```lua
+    -- Cursor on "telescope"
+    local telescope = require("telescope")
+    --     ^^^^^^^^^ press <Space>fc here
+    ```
+    
+    Useful for finding all references to a variable or function.
+  </Tab>
+  
+  <Tab title="TODO Search">
+    Press `<Space>ft` to find all TODO comments:
+    
+    ```lua
+    -- TODO: Add error handling
+    -- HACK: Temporary fix
+    -- FIX: Bug in parser
+    -- NOTE: Important comment
+    ```
+    
+    Requires the `todo-comments.nvim` plugin.
+  </Tab>
+</Tabs>
+
+### Finding Keymaps
+
+Press `<Space>fk` to search all configured keybindings:
+
+```
+# Search examples:
+telescope  → Find all Telescope keybindings
+harpoon    → Find Harpoon keybindings
+split      → Find window split commands
+```
+
+<Note>
+This is incredibly useful when you forget a keybinding or want to discover available shortcuts!
+</Note>
+
+## Advanced Usage
+
+### Send to Quickfix List
+
+1. In Telescope, select multiple items with `<Tab>`
+2. Press `<C-q>` to send to quickfix list
+3. Navigate quickfix with `:cnext` and `:cprev`
+
+### Telescope Built-in Pickers
+
+Access other Telescope features via command mode:
+
+```vim
+:Telescope buffers          " List open buffers
+:Telescope help_tags        " Search help documentation
+:Telescope git_files        " Git files (respects .gitignore)
+:Telescope git_commits      " Git commit history
+:Telescope colorscheme      " Preview and switch colorschemes
+:Telescope commands         " Search available commands
+```
+
+## Performance Tips
+
+<Accordion title="Large Projects">
+For large codebases:
+
+1. Use `:Telescope git_files` instead of `find_files` (respects .gitignore)
+2. The FZF native extension significantly improves performance
+3. Add directories to `.gitignore` to exclude from searches
+</Accordion>
+
+<Accordion title="File Patterns">
+Exclude certain files from searches by adding to your `.gitignore`:
+
+```gitignore
+node_modules/
+*.log
+.git/
+dist/
+build/
+```
+</Accordion>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Telescope shows no files">
+    Check if you're in a valid directory:
+    ```vim
+    :pwd
+    ```
+    
+    Navigate to your project root and try again.
+  </Accordion>
+  
+  <Accordion title="Live grep not working">
+    Telescope's live_grep requires `ripgrep` to be installed:
+    
+    ```bash
+    # macOS
+    brew install ripgrep
+    
+    # Ubuntu/Debian
+    sudo apt install ripgrep
+    
+    # Arch
+    sudo pacman -S ripgrep
+    ```
+  </Accordion>
+  
+  <Accordion title="FZF extension error">
+    The fzf-native extension requires compilation:
+    
+    ```vim
+    :Lazy build telescope-fzf-native.nvim
+    ```
+    
+    Ensure you have `make` and a C compiler installed.
+  </Accordion>
+</AccordionGroup>
+
+## Related Plugins
+
+<CardGroup cols={2}>
+  <Card title="Harpoon" icon="anchor" href="/plugins/harpoon">
+    Quick navigation to frequently used files
+  </Card>
+  
+  <Card title="nvim-tree" icon="folder-tree" href="/plugins/nvim-tree">
+    Visual file explorer for browsing
+  </Card>
+</CardGroup>
+
+## Source Code
+
+View the full configuration:
+```
+lua/leyland/plugins/telescope.lua
+```

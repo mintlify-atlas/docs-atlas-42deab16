@@ -1,0 +1,229 @@
+---
+title: 'Mason LSP Installer'
+description: 'Automatic language server and tool installation with Mason'
+icon: 'box'
+---
+
+## What is Mason?
+
+Mason is a portable package manager for Neovim that handles the installation of LSP servers, formatters, linters, and other development tools. nvim-luffy uses Mason to automatically install and manage all language servers.
+
+<Info>
+  Mason downloads and installs tools in Neovim's data directory, keeping your system clean and allowing version control per project.
+</Info>
+
+## Auto-Installed Language Servers
+
+nvim-luffy automatically installs the following language servers on first launch:
+
+<CodeGroup>
+```lua lua/leyland/plugins/lsp/mason.lua
+return {
+  {
+    "williamboman/mason-lspconfig.nvim",
+    opts = {
+      -- list of servers for mason to install
+      ensure_installed = {
+        "ts_ls",
+        "html",
+        "cssls",
+        "tailwindcss",
+        "svelte",
+        "lua_ls",
+        "graphql",
+        "emmet_ls",
+        "prismals",
+        "pyright",
+        "eslint",
+      },
+    },
+    dependencies = {
+      {
+        "williamboman/mason.nvim",
+        opts = {
+          ui = {
+            icons = {
+              package_installed = "✓",
+              package_pending = "➜",
+              package_uninstalled = "✗",
+            },
+          },
+        },
+      },
+      "neovim/nvim-lspconfig",
+    },
+  },
+}
+```
+</CodeGroup>
+
+### Language Server Details
+
+<CardGroup cols={2}>
+  <Card title="ts_ls" icon="js">
+    TypeScript & JavaScript - Type checking, autocompletion, and refactoring
+  </Card>
+  <Card title="html" icon="code">
+    HTML - Tag completion, validation, and formatting
+  </Card>
+  <Card title="cssls" icon="palette">
+    CSS/SCSS/Less - Property completion and validation
+  </Card>
+  <Card title="tailwindcss" icon="wind">
+    Tailwind CSS - Class name completion and color previews
+  </Card>
+  <Card title="svelte" icon="S">
+    Svelte - Component intelligence and type checking
+  </Card>
+  <Card title="lua_ls" icon="moon">
+    Lua - Enhanced with Neovim API definitions
+  </Card>
+  <Card title="graphql" icon="diagram-project">
+    GraphQL - Schema validation and query completion
+  </Card>
+  <Card title="emmet_ls" icon="bolt">
+    Emmet - HTML/CSS abbreviation expansion
+  </Card>
+  <Card title="prismals" icon="database">
+    Prisma - Schema validation and completion
+  </Card>
+  <Card title="pyright" icon="python">
+    Python - Static type checker with rich completions
+  </Card>
+  <Card title="eslint" icon="shield-check">
+    ESLint - JavaScript/TypeScript linting integration
+  </Card>
+</CardGroup>
+
+## Formatters & Linters
+
+In addition to language servers, Mason automatically installs formatters and linters:
+
+<CodeGroup>
+```lua Formatters & Linters
+{
+  "WhoIsSethDaniel/mason-tool-installer.nvim",
+  opts = {
+    ensure_installed = {
+      "prettier",  -- prettier formatter
+      "stylua",    -- lua formatter
+      "isort",     -- python formatter
+      "black",     -- python formatter
+      "pylint",    -- python linter
+      "eslint_d",  -- javascript/typescript linter
+    },
+  },
+  dependencies = {
+    "williamboman/mason.nvim",
+  },
+}
+```
+</CodeGroup>
+
+### Tool Details
+
+<AccordionGroup>
+  <Accordion title="Web Development Tools">
+    - **prettier** - Opinionated code formatter for JS, TS, CSS, HTML, and more
+    - **eslint_d** - Fast ESLint daemon for JavaScript and TypeScript linting
+  </Accordion>
+
+  <Accordion title="Python Tools">
+    - **black** - The uncompromising Python code formatter
+    - **isort** - Python import sorting utility
+    - **pylint** - Comprehensive Python linter
+  </Accordion>
+
+  <Accordion title="Lua Tools">
+    - **stylua** - Opinionated Lua code formatter
+  </Accordion>
+</AccordionGroup>
+
+## Mason UI Navigation
+
+Access the Mason interface to manage your installed tools:
+
+<Steps>
+  <Step title="Open Mason">
+    Run `:Mason` in Neovim to open the Mason UI
+  </Step>
+  <Step title="Browse Packages">
+    Use `j`/`k` to navigate through available packages
+  </Step>
+  <Step title="Install/Uninstall">
+    - Press `i` to install a package
+    - Press `X` to uninstall a package
+    - Press `u` to update a package
+  </Step>
+  <Step title="Check Status">
+    Packages are marked with icons:
+    - ✓ Installed
+    - ➜ Pending installation
+    - ✗ Not installed
+  </Step>
+</Steps>
+
+<Tip>
+  Press `g?` in the Mason UI to see all available keybindings.
+</Tip>
+
+## Adding More Servers
+
+To add additional language servers or tools:
+
+<Steps>
+  <Step title="Edit Mason Configuration">
+    Open `lua/leyland/plugins/lsp/mason.lua`
+  </Step>
+  <Step title="Add to ensure_installed">
+    ```lua
+    ensure_installed = {
+      "ts_ls",
+      "html",
+      -- Add your new server here
+      "rust_analyzer",  -- Example: Rust language server
+    },
+    ```
+  </Step>
+  <Step title="Restart Neovim">
+    The new server will be automatically installed on next launch
+  </Step>
+</Steps>
+
+<Note>
+  Browse available packages in the Mason UI (`:Mason`) or visit the [Mason registry](https://github.com/williamboman/mason.nvim/blob/main/PACKAGES.md) for a complete list.
+</Note>
+
+## Manual Installation
+
+You can also manually install packages via command:
+
+```bash
+:MasonInstall rust_analyzer
+:MasonUninstall rust_analyzer
+:MasonUpdate
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Server not installing">
+    1. Check your internet connection
+    2. Run `:checkhealth mason` to diagnose issues
+    3. Try manually installing with `:MasonInstall <server-name>`
+  </Accordion>
+
+  <Accordion title="Server installed but not working">
+    1. Verify the server is running with `:LspInfo`
+    2. Check the log file with `:lua vim.cmd('e' .. vim.lsp.get_log_path())`
+    3. Restart the LSP client with `:LspRestart`
+  </Accordion>
+
+  <Accordion title="Update all packages">
+    Run `:MasonUpdate` to update all installed packages
+  </Accordion>
+</AccordionGroup>
+
+<Card title="Next: LSP Configuration" icon="arrow-right" href="/lsp/configuration">
+  Learn how LSP servers are configured in nvim-luffy
+</Card>

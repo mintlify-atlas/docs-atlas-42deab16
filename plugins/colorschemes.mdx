@@ -1,0 +1,628 @@
+---
+title: 'Colorschemes'
+description: 'Beautiful themes for your coding environment'
+icon: 'palette'
+---
+
+## Overview
+
+nvim-luffy comes with multiple high-quality colorschemes pre-installed, allowing you to customize the look and feel of your editor. Each theme is carefully selected for readability, aesthetics, and Treesitter support.
+
+<Note>
+The default colorscheme is **bamboo**, but you can easily switch to any of the other installed themes.
+</Note>
+
+## Installed Colorschemes
+
+From `lua/leyland/plugins/colorscheme.lua`:
+
+```lua:lua/leyland/plugins/colorscheme.lua
+return {
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "folke/tokyonight.nvim", priority = 1000 },
+  { "miikanissi/modus-themes.nvim", priority = 1000 },
+  { "ribru17/bamboo.nvim", lazy = false, priority = 1000 },
+  { "navarasu/onedark.nvim", priority = 1000 },
+  { "rose-pine/neovim", name = "rose-pine", priority = 1000 },
+}
+```
+
+### Priority Loading
+
+```lua
+priority = 1000,
+```
+
+Colorscheme plugins have high priority to ensure they load before other plugins that depend on colors.
+
+## Available Themes
+
+<Tabs>
+  <Tab title="Bamboo (Default)">
+    ### Bamboo
+    
+    A warm, nature-inspired theme with excellent contrast.
+    
+    ```lua
+    vim.cmd.colorscheme("bamboo")
+    ```
+    
+    **Features:**
+    - Warm, earthy tones
+    - High contrast for readability
+    - Multiple variants available
+    - Excellent Treesitter support
+    
+    **Best for:** Long coding sessions, easy on the eyes
+  </Tab>
+  
+  <Tab title="Catppuccin">
+    ### Catppuccin
+    
+    A soothing pastel theme with four flavors.
+    
+    ```lua
+    vim.cmd.colorscheme("catppuccin")
+    -- or specific flavors:
+    vim.cmd.colorscheme("catppuccin-latte")     -- Light
+    vim.cmd.colorscheme("catppuccin-frappe")    -- Mild dark
+    vim.cmd.colorscheme("catppuccin-macchiato") -- Medium dark
+    vim.cmd.colorscheme("catppuccin-mocha")     -- Dark
+    ```
+    
+    **Variants:**
+    - **Latte** - Light theme with pastel colors
+    - **Frappé** - Soft dark theme
+    - **Macchiato** - Medium contrast dark
+    - **Mocha** - High contrast dark (most popular)
+    
+    **Best for:** Those who like pastel colors and have multiple variants to match their mood
+  </Tab>
+  
+  <Tab title="Tokyo Night">
+    ### Tokyo Night
+    
+    A clean, dark theme inspired by the Tokyo night skyline.
+    
+    ```lua
+    vim.cmd.colorscheme("tokyonight")
+    -- or specific variants:
+    vim.cmd.colorscheme("tokyonight-night")   -- Default
+    vim.cmd.colorscheme("tokyonight-storm")   -- Storm variant
+    vim.cmd.colorscheme("tokyonight-day")     -- Light variant
+    vim.cmd.colorscheme("tokyonight-moon")    -- Moon variant
+    ```
+    
+    **Variants:**
+    - **night** - Default, vibrant dark
+    - **storm** - Deeper, more subtle dark
+    - **moon** - Softer contrast
+    - **day** - Clean light theme
+    
+    **Best for:** Those who like vibrant, slightly neon aesthetics
+  </Tab>
+  
+  <Tab title="Modus">
+    ### Modus Themes
+    
+    Highly accessible themes with perfect color contrast.
+    
+    ```lua
+    vim.cmd.colorscheme("modus")
+    -- or specific variants:
+    vim.cmd.colorscheme("modus_operandi")    -- Light
+    vim.cmd.colorscheme("modus_vivendi")     -- Dark
+    ```
+    
+    **Features:**
+    - WCAG AAA accessibility standards
+    - Perfect for long reading sessions
+    - Extremely high contrast
+    - Originally from Emacs
+    
+    **Best for:** Accessibility, maximum readability, eye strain reduction
+  </Tab>
+  
+  <Tab title="OneDark">
+    ### OneDark
+    
+    Inspired by Atom's iconic One Dark theme.
+    
+    ```lua
+    vim.cmd.colorscheme("onedark")
+    ```
+    
+    **Features:**
+    - Classic, familiar look
+    - Well-balanced colors
+    - Excellent syntax highlighting
+    - Multiple style variants in config
+    
+    **Styles (via config):**
+    - dark
+    - darker
+    - cool
+    - deep
+    - warm
+    - warmer
+    
+    **Best for:** Atom/VSCode users seeking familiarity
+  </Tab>
+  
+  <Tab title="Rose Pine">
+    ### Rosé Pine
+    
+    A low-contrast theme with soft colors.
+    
+    ```lua
+    vim.cmd.colorscheme("rose-pine")
+    -- or specific variants:
+    vim.cmd.colorscheme("rose-pine-main")     -- Main variant
+    vim.cmd.colorscheme("rose-pine-moon")     -- Moon variant  
+    vim.cmd.colorscheme("rose-pine-dawn")     -- Light variant
+    ```
+    
+    **Variants:**
+    - **main** - Balanced dark theme
+    - **moon** - Deeper, more subtle
+    - **dawn** - Soft light theme
+    
+    **Best for:** Those who prefer low contrast and softer colors
+  </Tab>
+</Tabs>
+
+## Switching Themes
+
+### Method 1: Command Mode
+
+The fastest way to switch themes:
+
+```vim
+:colorscheme catppuccin
+:colorscheme tokyonight
+:colorscheme bamboo
+```
+
+<Note>
+Use `<Tab>` completion after `:colorscheme ` to see all available themes!
+</Note>
+
+### Method 2: Telescope
+
+Visually preview themes before switching:
+
+```vim
+:Telescope colorscheme
+```
+
+<Steps>
+  <Step title="Open Telescope Colorschemes">
+    Type `:Telescope colorscheme` and press Enter
+  </Step>
+  
+  <Step title="Preview Themes">
+    Use `<C-j>` / `<C-k>` to navigate
+    
+    Telescope shows a live preview as you move through the list!
+  </Step>
+  
+  <Step title="Select Theme">
+    Press `<Enter>` to apply the theme
+  </Step>
+</Steps>
+
+### Method 3: Edit Config
+
+Set your default theme permanently:
+
+<Steps>
+  <Step title="Open colorscheme.lua">
+    ```vim
+    :e ~/.config/nvim/lua/leyland/plugins/colorscheme.lua
+    ```
+  </Step>
+  
+  <Step title="Change the colorscheme line">
+    Find this section in the `rose-pine` config:
+    
+    ```lua:lua/leyland/plugins/colorscheme.lua
+    {
+      "rose-pine/neovim",
+      name = "rose-pine",
+      priority = 1000,
+      config = function()
+        -- Set your default theme here
+        vim.cmd.colorscheme("bamboo")  -- Change this line
+      end,
+    }
+    ```
+  </Step>
+  
+  <Step title="Change to your preferred theme">
+    ```lua
+    vim.cmd.colorscheme("catppuccin")  -- or any other theme
+    ```
+  </Step>
+  
+  <Step title="Save and reload">
+    ```vim
+    :w
+    :source %
+    ```
+  </Step>
+</Steps>
+
+## Theme Comparison
+
+| Theme | Type | Contrast | Best For |
+|-------|------|----------|----------|
+| **Bamboo** | Warm Dark | High | Long sessions, default |
+| **Catppuccin** | Pastel | Medium | Soft, customizable |
+| **Tokyo Night** | Vibrant Dark | High | Modern, neon aesthetic |
+| **Modus** | Accessible | Very High | Accessibility, readability |
+| **OneDark** | Classic Dark | Medium | Familiar, VSCode-like |
+| **Rose Pine** | Soft Dark/Light | Low | Low contrast lovers |
+
+## Configuring Themes
+
+Many themes support additional configuration:
+
+### Catppuccin
+
+```lua
+{
+  "catppuccin/nvim",
+  name = "catppuccin",
+  priority = 1000,
+  config = function()
+    require("catppuccin").setup({
+      flavour = "mocha",  -- latte, frappe, macchiato, mocha
+      transparent_background = false,
+      integrations = {
+        telescope = true,
+        harpoon = true,
+        nvimtree = true,
+        treesitter = true,
+      },
+    })
+    vim.cmd.colorscheme("catppuccin")
+  end,
+}
+```
+
+### Tokyo Night
+
+```lua
+{
+  "folke/tokyonight.nvim",
+  priority = 1000,
+  config = function()
+    require("tokyonight").setup({
+      style = "night",  -- storm, night, moon, day
+      transparent = false,
+      styles = {
+        comments = { italic = true },
+        keywords = { italic = true },
+      },
+    })
+    vim.cmd.colorscheme("tokyonight")
+  end,
+}
+```
+
+### OneDark
+
+The config in the file shows how to customize OneDark (currently commented out):
+
+```lua:lua/leyland/plugins/colorscheme.lua
+-- config = function()
+--   require("onedark").setup({
+--     style = "deep",  -- dark, darker, cool, deep, warm, warmer
+--   })
+--   require("onedark").load()
+-- end,
+```
+
+Uncomment and modify to use OneDark with custom settings.
+
+### Rose Pine
+
+```lua
+{
+  "rose-pine/neovim",
+  name = "rose-pine",
+  config = function()
+    require("rose-pine").setup({
+      variant = "main",  -- main, moon, dawn
+      dark_variant = "main",
+      disable_italics = false,
+    })
+    vim.cmd.colorscheme("rose-pine")
+  end,
+}
+```
+
+## Transparency
+
+Enable transparent backgrounds (requires terminal support):
+
+### For Most Themes
+
+```lua
+config = function()
+  require("theme-name").setup({
+    transparent_background = true,
+  })
+  vim.cmd.colorscheme("theme-name")
+end,
+```
+
+### Manual Transparency
+
+Set transparency after loading any theme:
+
+```lua
+vim.cmd.colorscheme("bamboo")
+
+-- Make background transparent
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
+```
+
+<Warning>
+Transparency requires a terminal that supports it (like kitty, alacritty, wezterm) and proper terminal configuration.
+</Warning>
+
+## Theme Treesitter Support
+
+All included themes have excellent Treesitter support:
+
+```typescript
+// See the difference in syntax highlighting
+interface User {
+  name: string;        // Types highlighted correctly
+  age: number;         // Consistent across themes
+}
+
+const fetchUser = async (): Promise<User> => {
+  const response = await fetch('/api/user');
+  return response.json();
+};
+```
+
+Each theme applies its own colors to Treesitter's semantic tokens.
+
+## Light vs Dark Themes
+
+### Dark Themes
+
+```lua
+-- Dark options
+vim.cmd.colorscheme("bamboo")
+vim.cmd.colorscheme("catppuccin-mocha")
+vim.cmd.colorscheme("tokyonight-night")
+vim.cmd.colorscheme("modus_vivendi")
+vim.cmd.colorscheme("onedark")
+vim.cmd.colorscheme("rose-pine-main")
+```
+
+### Light Themes
+
+```lua  
+-- Light options
+vim.cmd.colorscheme("catppuccin-latte")
+vim.cmd.colorscheme("tokyonight-day")
+vim.cmd.colorscheme("modus_operandi")
+vim.cmd.colorscheme("rose-pine-dawn")
+```
+
+### Auto-Switch Based on Time
+
+Switch themes based on time of day:
+
+```lua
+local hour = tonumber(os.date("%H"))
+
+if hour >= 6 and hour < 18 then
+  -- Daytime: use light theme
+  vim.cmd.colorscheme("catppuccin-latte")
+else
+  -- Nighttime: use dark theme
+  vim.cmd.colorscheme("catppuccin-mocha")
+end
+```
+
+## Adding New Themes
+
+To install a new colorscheme:
+
+<Steps>
+  <Step title="Add to colorscheme.lua">
+    ```lua
+    return {
+      -- ... existing themes
+      {
+        "author/new-theme",
+        priority = 1000,
+      },
+    }
+    ```
+  </Step>
+  
+  <Step title="Sync with Lazy">
+    ```vim
+    :Lazy sync
+    ```
+  </Step>
+  
+  <Step title="Try the new theme">
+    ```vim
+    :colorscheme new-theme
+    ```
+  </Step>
+  
+  <Step title="Set as default (optional)">
+    Update the `vim.cmd.colorscheme()` line in the config
+  </Step>
+</Steps>
+
+### Popular Additional Themes
+
+```lua
+-- Nord theme
+{ "shaunsingh/nord.nvim", priority = 1000 },
+
+-- Gruvbox
+{ "ellisonleao/gruvbox.nvim", priority = 1000 },
+
+-- Kanagawa
+{ "rebelot/kanagawa.nvim", priority = 1000 },
+
+-- Nightfox
+{ "EdenEast/nightfox.nvim", priority = 1000 },
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Theme colors look wrong">
+    Ensure your terminal supports true color:
+    
+    ```lua
+    -- In your init.lua
+    vim.opt.termguicolors = true
+    ```
+    
+    Check terminal capabilities:
+    ```bash
+    echo $TERM
+    # Should show something like: xterm-256color or tmux-256color
+    ```
+  </Accordion>
+  
+  <Accordion title="Theme not found">
+    Verify the theme is installed:
+    
+    ```vim
+    :Lazy
+    # Look for the colorscheme plugin
+    ```
+    
+    If missing, sync plugins:
+    ```vim
+    :Lazy sync
+    ```
+  </Accordion>
+  
+  <Accordion title="Theme doesn't persist after restart">
+    Make sure you've set the theme in the config file:
+    
+    ```lua:lua/leyland/plugins/colorscheme.lua
+    config = function()
+      vim.cmd.colorscheme("your-theme")
+    end,
+    ```
+    
+    Not just in command mode during the session.
+  </Accordion>
+  
+  <Accordion title="Italic text not showing">
+    Your terminal font must support italics:
+    
+    1. Test if terminal supports italics:
+    ```bash
+    echo -e "\e[3mItalic text\e[0m"
+    ```
+    
+    2. Use a font that supports italics (most modern fonts do)
+    
+    3. Some themes let you disable italics:
+    ```lua
+    require("theme-name").setup({
+      disable_italics = true,
+    })
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Theme Showcase
+
+Each theme shines in different scenarios:
+
+### Best for Web Development
+
+```lua
+vim.cmd.colorscheme("tokyonight-night")  -- Vibrant, great for JS/TS
+vim.cmd.colorscheme("catppuccin-mocha")  -- Soft, easy on eyes
+```
+
+### Best for Readability
+
+```lua
+vim.cmd.colorscheme("modus_vivendi")   -- Maximum contrast
+vim.cmd.colorscheme("modus_operandi")  -- Light, super readable
+```
+
+### Best for Aesthetics
+
+```lua
+vim.cmd.colorscheme("catppuccin-mocha")  -- Beautiful pastels
+vim.cmd.colorscheme("rose-pine-main")    -- Elegant, low contrast
+```
+
+### Best for Long Sessions
+
+```lua
+vim.cmd.colorscheme("bamboo")            -- Warm, easy on eyes
+vim.cmd.colorscheme("rose-pine-moon")    -- Low contrast, comfortable
+```
+
+## Keybindings for Themes
+
+Create a quick theme switcher:
+
+```lua
+-- In your keymaps
+local keymap = vim.keymap
+
+keymap.set("n", "<leader>tc", ":Telescope colorscheme<cr>", { desc = "Change colorscheme" })
+```
+
+Now press `<Space>tc` to quickly preview and switch themes!
+
+## Integration with Plugins
+
+Themes automatically integrate with:
+
+- **Telescope** - Themed fuzzy finder UI
+- **nvim-tree** - Colored file explorer
+- **Treesitter** - Semantic highlighting
+- **LSP** - Diagnostic colors
+- **Git signs** - Git gutter colors
+- **Alpha** - Dashboard styling
+
+Each theme provides consistent colors across all plugins.
+
+## Related Configuration
+
+<CardGroup cols={2}>
+  <Card title="Alpha Dashboard" icon="house-flag" href="/plugins/alpha">
+    Dashboard appearance changes with theme
+  </Card>
+  
+  <Card title="Treesitter" icon="code" href="/plugins/treesitter">
+    Syntax highlighting powered by Treesitter
+  </Card>
+</CardGroup>
+
+## Source Code
+
+View the full configuration:
+```
+lua/leyland/plugins/colorscheme.lua
+```
+
+<Note>
+Remember: The best colorscheme is the one that makes you happy and productive. Don't hesitate to experiment until you find your favorite!
+</Note>

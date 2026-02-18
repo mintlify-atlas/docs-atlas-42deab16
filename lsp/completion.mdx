@@ -1,0 +1,486 @@
+---
+title: 'Completion System'
+description: 'Master autocompletion with nvim-cmp and LuaSnip'
+icon: 'keyboard'
+---
+
+## Overview
+
+nvim-luffy uses **nvim-cmp** as its completion engine, providing intelligent autocompletion from multiple sources including LSP servers, snippets, buffer text, and file paths.
+
+<Info>
+  The completion system is configured in `lua/leyland/plugins/nvim-cmp.lua`
+</Info>
+
+<CardGroup cols={2}>
+  <Card title="Smart Suggestions" icon="brain">
+    Context-aware completions from LSP servers
+  </Card>
+  <Card title="Snippet Engine" icon="code">
+    LuaSnip for powerful code snippets
+  </Card>
+  <Card title="Multiple Sources" icon="layer-group">
+    LSP, snippets, buffer, and path completions
+  </Card>
+  <Card title="VS Code Icons" icon="icons">
+    lspkind for beautiful completion menu
+  </Card>
+</CardGroup>
+
+## nvim-cmp Setup
+
+The completion plugin is lazy-loaded when entering insert mode:
+
+<CodeGroup>
+```lua lua/leyland/plugins/nvim-cmp.lua
+return {
+  "hrsh7th/nvim-cmp",
+  event = "InsertEnter",
+  dependencies = {
+    "hrsh7th/cmp-buffer",     -- source for text in buffer
+    "hrsh7th/cmp-path",       -- source for file system paths
+    {
+      "L3MON4D3/LuaSnip",
+      version = "v2.*",
+      build = "make install_jsregexp",
+    },
+    "saadparwaiz1/cmp_luasnip",    -- for autocompletion
+    "rafamadriz/friendly-snippets", -- useful snippets
+    "onsails/lspkind.nvim",         -- vs-code like pictograms
+  },
+}
+```
+</CodeGroup>
+
+<Tip>
+  The plugin only loads when you enter insert mode, keeping Neovim startup fast.
+</Tip>
+
+## Completion Sources
+
+nvim-cmp pulls completions from multiple sources in priority order:
+
+<CodeGroup>
+```lua Completion Sources
+sources = cmp.config.sources({
+  { name = "nvim_lsp" },  -- LSP completions
+  { name = "luasnip" },   -- Snippets
+  { name = "buffer" },    -- Text within current buffer
+  { name = "path" },      -- File system paths
+})
+```
+</CodeGroup>
+
+### Source Details
+
+<AccordionGroup>
+  <Accordion title="nvim_lsp - Language Server Completions">
+    Provides intelligent completions from LSP servers:
+    - Functions, methods, and variables
+    - Type information and documentation
+    - Import suggestions
+    - Context-aware suggestions
+    
+    Example: Type `console.` in JavaScript to see `log`, `error`, `warn`, etc.
+  </Accordion>
+
+  <Accordion title="luasnip - Code Snippets">
+    Expands pre-defined code templates:
+    - Language-specific snippets from friendly-snippets
+    - Custom snippets you define
+    - Multi-cursor placeholders
+    
+    Example: Type `func` in JavaScript and expand to a full function template
+  </Accordion>
+
+  <Accordion title="buffer - Buffer Text">
+    Completes from text in the current buffer:
+    - Variable names you've already typed
+    - Any words in the open file
+    - Great for consistent naming
+    
+    Example: If you typed `myLongVariableName` earlier, it will suggest it again
+  </Accordion>
+
+  <Accordion title="path - File System Paths">
+    Completes file and directory paths:
+    - Relative paths (`./`, `../`)
+    - Absolute paths (`/home/...`)
+    - Tilde expansion (`~/`)
+    
+    Example: Type `./src/` to see available files in the src directory
+  </Accordion>
+</AccordionGroup>
+
+## Keybindings
+
+nvim-cmp provides intuitive keybindings for navigating and selecting completions:
+
+<CodeGroup>
+```lua Completion Keybindings
+mapping = cmp.mapping.preset.insert({
+  ["<C-k>"] = cmp.mapping.select_prev_item(),  -- previous suggestion
+  ["<C-j>"] = cmp.mapping.select_next_item(),  -- next suggestion
+  ["<C-b>"] = cmp.mapping.scroll_docs(-4),     -- scroll docs up
+  ["<C-f>"] = cmp.mapping.scroll_docs(4),      -- scroll docs down
+  ["<C-Space>"] = cmp.mapping.complete(),      -- show completions
+  ["<C-e>"] = cmp.mapping.abort(),             -- close completion
+  ["<CR>"] = cmp.mapping.confirm({ select = false }),
+  ["<Tab>"] = cmp.mapping(function(fallback)
+    if cmp.visible() then
+      cmp.select_next_item()
+    elseif luasnip.expand_or_jumpable() then
+      luasnip.expand_or_jump()
+    else
+      fallback()
+    end
+  end, { "i", "s" }),
+})
+```
+</CodeGroup>
+
+### Keybinding Reference
+
+<ParamField path="<C-k>" type="Previous Item">
+  Navigate to the previous completion suggestion
+</ParamField>
+
+<ParamField path="<C-j>" type="Next Item">
+  Navigate to the next completion suggestion
+</ParamField>
+
+<ParamField path="<Tab>" type="Smart Tab">
+  - Select next item if menu is visible
+  - Expand or jump to next snippet placeholder
+  - Insert tab character otherwise
+</ParamField>
+
+<ParamField path="<CR>" type="Confirm">
+  Accept the currently selected completion (only if explicitly selected)
+</ParamField>
+
+<ParamField path="<C-Space>" type="Trigger">
+  Manually trigger completion menu
+</ParamField>
+
+<ParamField path="<C-e>" type="Abort">
+  Close the completion menu without selecting
+</ParamField>
+
+<ParamField path="<C-b>" type="Scroll Up">
+  Scroll documentation preview up (4 lines)
+</ParamField>
+
+<ParamField path="<C-f>" type="Scroll Down">
+  Scroll documentation preview down (4 lines)
+</ParamField>
+
+<Tip>
+  The Tab key is smart: it navigates completions, expands snippets, and jumps between snippet placeholders automatically!
+</Tip>
+
+## LuaSnip Snippet Engine
+
+LuaSnip is a powerful snippet engine with support for modern snippet formats:
+
+<CodeGroup>
+```lua LuaSnip Configuration
+local luasnip = require("luasnip")
+
+-- loads vscode style snippets from installed plugins
+require("luasnip.loaders.from_vscode").lazy_load()
+
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
+})
+```
+</CodeGroup>
+
+### Snippet Features
+
+<CardGroup cols={2}>
+  <Card title="VSCode Snippets" icon="code">
+    Uses snippets from friendly-snippets (same format as VS Code)
+  </Card>
+  <Card title="Multi-cursor" icon="i-cursor">
+    Jump between placeholders with Tab
+  </Card>
+  <Card title="Dynamic" icon="bolt">
+    Execute Lua code within snippets
+  </Card>
+  <Card title="Language-aware" icon="language">
+    Different snippets for each language
+  </Card>
+</CardGroup>
+
+### Using Snippets
+
+<Steps>
+  <Step title="Type Trigger">
+    Start typing a snippet trigger (e.g., `for`, `func`, `class`)
+  </Step>
+  <Step title="Select from Menu">
+    The snippet appears in the completion menu with a ` ` icon (or similar)
+  </Step>
+  <Step title="Expand">
+    Press `<Tab>` or `<CR>` to expand the snippet
+  </Step>
+  <Step title="Navigate Placeholders">
+    Press `<Tab>` to jump between placeholders, fill in values
+  </Step>
+  <Step title="Finish">
+    Continue editing normally when done
+  </Step>
+</Steps>
+
+### Example Snippets
+
+<AccordionGroup>
+  <Accordion title="JavaScript - for loop">
+    ```javascript
+    // Type: for
+    // Expands to:
+    for (let i = 0; i < array.length; i++) {
+      const element = array[i];
+      
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="TypeScript - interface">
+    ```typescript
+    // Type: interface
+    // Expands to:
+    interface Name {
+      
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Python - class">
+    ```python
+    # Type: class
+    # Expands to:
+    class ClassName:
+        def __init__(self):
+            pass
+    ```
+  </Accordion>
+
+  <Accordion title="Lua - function">
+    ```lua
+    -- Type: func
+    -- Expands to:
+    function name()
+      
+    end
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## lspkind Pictograms
+
+lspkind adds VS Code-like icons to the completion menu:
+
+<CodeGroup>
+```lua lspkind Configuration
+local lspkind = require("lspkind")
+
+cmp.setup({
+  formatting = {
+    format = lspkind.cmp_format({
+      maxwidth = 50,
+      ellipsis_char = "...",
+    }),
+  },
+})
+```
+</CodeGroup>
+
+### Icon Types
+
+The completion menu shows different icons for different item types:
+
+- ` ` Method/Function
+- `󰜢 ` Variable
+- `󰅩 ` Class
+- ` ` Interface
+- ` ` Snippet
+- ` ` Property
+- `󰈿 ` File
+- `󰉋 ` Folder
+- ` ` Keyword
+- `󰦨 ` Module
+
+<Tip>
+  Icons help you quickly identify what type of completion you're looking at without reading the text.
+</Tip>
+
+## Complete Configuration
+
+Here's the full nvim-cmp configuration:
+
+<CodeGroup>
+```lua Full Configuration
+config = function()
+  local cmp = require("cmp")
+  local luasnip = require("luasnip")
+  local lspkind = require("lspkind")
+
+  -- loads vscode style snippets from installed plugins
+  require("luasnip.loaders.from_vscode").lazy_load()
+
+  cmp.setup({
+    snippet = {
+      expand = function(args)
+        luasnip.lsp_expand(args.body)
+      end,
+    },
+    mapping = cmp.mapping.preset.insert({
+      ["<C-k>"] = cmp.mapping.select_prev_item(),
+      ["<C-j>"] = cmp.mapping.select_next_item(),
+      ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+      ["<C-f>"] = cmp.mapping.scroll_docs(4),
+      ["<C-Space>"] = cmp.mapping.complete(),
+      ["<C-e>"] = cmp.mapping.abort(),
+      ["<CR>"] = cmp.mapping.confirm({ select = false }),
+      ["<Tab>"] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.select_next_item()
+        elseif luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        else
+          fallback()
+        end
+      end, { "i", "s" }),
+    }),
+    sources = cmp.config.sources({
+      { name = "nvim_lsp" },
+      { name = "luasnip" },
+      { name = "buffer" },
+      { name = "path" },
+    }),
+    formatting = {
+      format = lspkind.cmp_format({
+        maxwidth = 50,
+        ellipsis_char = "...",
+      }),
+    },
+  })
+end
+```
+</CodeGroup>
+
+## Customization
+
+### Adding Custom Snippets
+
+Create custom snippets in `~/.config/nvim/snippets/`:
+
+<Steps>
+  <Step title="Create Snippet File">
+    Create a file for your language (e.g., `typescript.json`)
+  </Step>
+  <Step title="Define Snippets">
+    ```json
+    {
+      "Console Log": {
+        "prefix": "cl",
+        "body": ["console.log('$1:', $1)"],
+        "description": "Quick console log"
+      }
+    }
+    ```
+  </Step>
+  <Step title="Load Custom Snippets">
+    Add to your config:
+    ```lua
+    require("luasnip.loaders.from_vscode").lazy_load({ paths = "~/.config/nvim/snippets" })
+    ```
+  </Step>
+</Steps>
+
+### Adjusting Source Priority
+
+Reorder sources to change completion priority:
+
+```lua
+sources = cmp.config.sources({
+  { name = "luasnip" },   -- Snippets first
+  { name = "nvim_lsp" },  -- Then LSP
+  { name = "buffer" },
+  { name = "path" },
+})
+```
+
+### Changing Menu Appearance
+
+Customize the completion menu format:
+
+```lua
+formatting = {
+  format = lspkind.cmp_format({
+    mode = 'symbol_text',  -- Show icon and text
+    maxwidth = 50,         -- Max width of menu
+    ellipsis_char = '...',
+    show_labelDetails = true,
+  }),
+}
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Completions not appearing">
+    1. Check LSP is attached: `:LspInfo`
+    2. Verify nvim-cmp is loaded: `:lua =require('cmp')`
+    3. Try manually triggering: `<C-Space>`
+    4. Check sources are configured: `:lua =require('cmp').get_config().sources`
+  </Accordion>
+
+  <Accordion title="Snippets not working">
+    1. Verify LuaSnip is loaded: `:lua =require('luasnip')`
+    2. Check friendly-snippets is installed: `:Lazy`
+    3. Try reloading snippets: `:lua require('luasnip.loaders.from_vscode').lazy_load()`
+  </Accordion>
+
+  <Accordion title="Icons not showing">
+    1. Check your terminal supports Nerd Fonts
+    2. Verify lspkind is loaded: `:lua =require('lspkind')`
+    3. Install a Nerd Font from [nerdfonts.com](https://www.nerdfonts.com/)
+  </Accordion>
+
+  <Accordion title="Tab key not working">
+    1. Check for conflicting mappings: `:verbose imap <Tab>`
+    2. Verify LuaSnip keybindings are set
+    3. Try the explicit `<C-j>` keybinding instead
+  </Accordion>
+</AccordionGroup>
+
+## Performance Tips
+
+<CardGroup cols={2}>
+  <Card title="Limit Buffer Source" icon="gauge">
+    Restrict buffer completions to nearby text:
+    ```lua
+    { name = "buffer", option = { keyword_length = 3 } }
+    ```
+  </Card>
+  <Card title="Debounce Completions" icon="clock">
+    Add delay before showing completions:
+    ```lua
+    performance = {
+      debounce = 60,
+      throttle = 30,
+    }
+    ```
+  </Card>
+</CardGroup>
+
+<Card title="Back to Overview" icon="arrow-left" href="/lsp/overview">
+  Return to LSP overview
+</Card>

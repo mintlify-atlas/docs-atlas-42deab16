@@ -1,0 +1,259 @@
+---
+title: 'LSP Configuration'
+description: 'Understanding LSP server configuration and capabilities'
+icon: 'gear'
+---
+
+## Configuration Overview
+
+nvim-luffy configures LSP servers with enhanced capabilities for autocompletion, file operations, and language-specific features. The configuration is centralized and applies to all language servers automatically.
+
+<Info>
+  Configuration is handled in `lua/leyland/plugins/lsp/lsp.lua`
+</Info>
+
+## Core Configuration
+
+The LSP configuration plugin sets up capabilities that all language servers will use:
+
+<CodeGroup>
+```lua lua/leyland/plugins/lsp/lsp.lua
+return {
+  "hrsh7th/cmp-nvim-lsp",
+  event = { "BufReadPre", "BufNewFile" },
+  dependencies = {
+    { "antosha417/nvim-lsp-file-operations", config = true },
+    { "folke/lazydev.nvim", opts = {} },
+  },
+  config = function()
+    -- import cmp-nvim-lsp plugin
+    local cmp_nvim_lsp = require("cmp_nvim_lsp")
+
+    -- used to enable autocompletion (assign to every lsp server config)
+    local capabilities = cmp_nvim_lsp.default_capabilities()
+
+    vim.lsp.config("*", {
+      capabilities = capabilities,
+    })
+  end,
+}
+```
+</CodeGroup>
+
+## Capabilities Setup
+
+The configuration enhances LSP servers with additional capabilities:
+
+### cmp-nvim-lsp Integration
+
+<Card title="Enhanced Autocompletion" icon="sparkles">
+  The `cmp_nvim_lsp.default_capabilities()` function advertises nvim-cmp's completion capabilities to LSP servers, enabling rich autocompletion features.
+</Card>
+
+```lua
+local capabilities = cmp_nvim_lsp.default_capabilities()
+```
+
+This setup provides:
+- **Snippet support** - Servers can send snippet completions
+- **Resolve support** - Additional info loaded on-demand
+- **Documentation** - Rich documentation in completion menu
+- **Signature help** - Function parameter hints
+
+### Universal Configuration
+
+The `vim.lsp.config("*", {...})` applies configuration to all LSP servers:
+
+<CodeGroup>
+```lua Global LSP Config
+vim.lsp.config("*", {
+  capabilities = capabilities,
+})
+```
+</CodeGroup>
+
+<Tip>
+  The `"*"` pattern means this configuration applies to every language server automatically. No per-server configuration needed!
+</Tip>
+
+## File Operations Support
+
+nvim-luffy includes advanced file operation capabilities:
+
+<Card title="nvim-lsp-file-operations" icon="files">
+  Automatically handles file events when you rename, move, or delete files in Neo-tree or nvim-tree.
+</Card>
+
+```lua
+{ "antosha417/nvim-lsp-file-operations", config = true }
+```
+
+### What File Operations Enable
+
+<AccordionGroup>
+  <Accordion title="Automatic Import Updates">
+    When you rename or move a file, imports in other files are automatically updated by the LSP server.
+    
+    ```typescript
+    // Before: import { User } from './user'
+    // After renaming user.ts to customer.ts:
+    // import { User } from './customer'
+    ```
+  </Accordion>
+
+  <Accordion title="Workspace Edits">
+    File operations trigger workspace-wide edits to keep your codebase consistent.
+  </Accordion>
+
+  <Accordion title="Tree Integration">
+    Works seamlessly with file explorers like Neo-tree when you:
+    - Rename files (press `r`)
+    - Move files (press `x` to cut, `p` to paste)
+    - Delete files (press `d`)
+  </Accordion>
+</AccordionGroup>
+
+## Lua Development Enhancement
+
+nvim-luffy includes special configuration for Lua development:
+
+<Card title="lazydev.nvim" icon="moon" href="https://github.com/folke/lazydev.nvim">
+  Provides proper Neovim Lua API type definitions and completions
+</Card>
+
+```lua
+{ "folke/lazydev.nvim", opts = {} }
+```
+
+### Lazydev Features
+
+<CardGroup cols={2}>
+  <Card title="Neovim API Types" icon="book-open">
+    Full type definitions for `vim.*` APIs
+  </Card>
+  <Card title="Plugin Development" icon="puzzle-piece">
+    Enhanced completions for plugin development
+  </Card>
+  <Card title="Runtime Paths" icon="folder">
+    Automatic library detection from runtimepath
+  </Card>
+  <Card title="Smart Completions" icon="wand-magic">
+    Context-aware Lua completions
+  </Card>
+</CardGroup>
+
+<Tip>
+  When editing Neovim config files, you'll get completions like `vim.keymap.set`, `vim.api.nvim_buf_get_lines`, etc.
+</Tip>
+
+## Lazy Loading
+
+The LSP configuration uses smart lazy loading:
+
+```lua
+event = { "BufReadPre", "BufNewFile" }
+```
+
+<Info>
+  LSP configuration loads only when you open or create a file, reducing Neovim startup time.
+</Info>
+
+## How It All Works Together
+
+<Steps>
+  <Step title="File Open">
+    You open a file (e.g., `app.tsx`)
+  </Step>
+  <Step title="Server Detection">
+    Mason-lspconfig detects the file type and starts the appropriate server (ts_ls)
+  </Step>
+  <Step title="Capabilities Applied">
+    The server receives enhanced capabilities from cmp-nvim-lsp
+  </Step>
+  <Step title="Features Active">
+    - Autocompletion works via nvim-cmp
+    - File operations are tracked
+    - Diagnostics appear in real-time
+  </Step>
+</Steps>
+
+## Customizing Configuration
+
+To add custom configuration for specific servers:
+
+<Steps>
+  <Step title="Use vim.lsp.config">
+    Add server-specific config alongside the global config:
+    
+    ```lua
+    -- Global config for all servers
+    vim.lsp.config("*", {
+      capabilities = capabilities,
+    })
+    
+    -- Specific config for TypeScript
+    vim.lsp.config.ts_ls = {
+      settings = {
+        typescript = {
+          inlayHints = {
+            includeInlayParameterNameHints = 'all',
+          },
+        },
+      },
+    }
+    ```
+  </Step>
+  <Step title="Restart LSP">
+    Run `:LspRestart` to apply changes
+  </Step>
+</Steps>
+
+## Checking LSP Status
+
+Use these commands to inspect LSP configuration:
+
+<CodeGroup>
+```vim LSP Commands
+:LspInfo          " Show attached clients and configuration
+:LspLog           " Open the LSP log file
+:LspRestart       " Restart LSP clients for current buffer
+:checkhealth lsp  " Diagnose LSP issues
+```
+</CodeGroup>
+
+## Configuration File Location
+
+<Tip>
+  The LSP configuration is in `lua/leyland/plugins/lsp/lsp.lua:8-17`
+</Tip>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Completions not working">
+    1. Check if the LSP server is attached: `:LspInfo`
+    2. Verify capabilities are set: `:lua =vim.lsp.get_clients()[1].server_capabilities`
+    3. Check nvim-cmp is running: `:lua =require('cmp').visible()`
+  </Accordion>
+
+  <Accordion title="File operations not triggering">
+    1. Ensure nvim-lsp-file-operations is loaded: `:lua =package.loaded['lsp-file-operations']`
+    2. Check server supports workspace edits: `:LspInfo`
+    3. Try restarting the LSP: `:LspRestart`
+  </Accordion>
+
+  <Accordion title="Lua completions missing">
+    1. Verify lazydev is loaded: `:lua =require('lazydev')`
+    2. Check lua_ls is attached: `:LspInfo`
+    3. Open a Lua file to trigger lazy loading
+  </Accordion>
+</AccordionGroup>
+
+<CardGroup cols={2}>
+  <Card title="Previous: Mason" icon="arrow-left" href="/lsp/mason">
+    Back to Mason installation guide
+  </Card>
+  <Card title="Next: Completion" icon="arrow-right" href="/lsp/completion">
+    Learn about the completion system
+  </Card>
+</CardGroup>

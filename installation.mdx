@@ -1,0 +1,210 @@
+---
+title: Installation
+description: Step-by-step guide to installing and setting up nvim-luffy
+---
+
+# Installation Guide
+
+Get nvim-luffy up and running on your system with this comprehensive installation guide.
+
+## Prerequisites
+
+Before installing nvim-luffy, ensure you have the following installed on your system:
+
+### Required
+
+- **Neovim 0.9.0 or later** - nvim-luffy uses modern Neovim features and APIs
+- **Git** - Required for cloning the repository and plugin management
+- **A C compiler** - Needed for building some plugins (gcc, clang, or MSVC)
+- **Make** - Required for building telescope-fzf-native
+
+### Recommended
+
+- **Node.js and npm** - Required for many LSP servers (TypeScript, ESLint, etc.)
+- **Python 3** - For Python development features
+- **ripgrep** - For faster text searching with Telescope
+- **fd** - For faster file finding (optional but recommended)
+- **A Nerd Font** - For proper icon display (FiraCode Nerd Font, JetBrains Mono Nerd Font, etc.)
+
+<Tip>
+  To check your Neovim version, run `nvim --version` in your terminal. If you need to upgrade, visit [neovim.io](https://neovim.io).
+</Tip>
+
+## Installation Steps
+
+<Steps>
+  <Step title="Backup existing Neovim configuration">
+    If you have an existing Neovim configuration, back it up first:
+    
+    ```bash
+    # Backup your current config
+    mv ~/.config/nvim ~/.config/nvim.backup
+    
+    # Also backup your data directory (optional)
+    mv ~/.local/share/nvim ~/.local/share/nvim.backup
+    ```
+  </Step>
+  
+  <Step title="Clone the nvim-luffy repository">
+    Clone nvim-luffy to your Neovim configuration directory:
+    
+    ```bash
+    git clone https://github.com/yourusername/nvim-luffy.git ~/.config/nvim
+    ```
+    
+    <Note>
+      On Windows, use `%LOCALAPPDATA%\nvim` instead of `~/.config/nvim`
+    </Note>
+  </Step>
+  
+  <Step title="Launch Neovim">
+    Start Neovim for the first time:
+    
+    ```bash
+    nvim
+    ```
+    
+    The first launch will automatically:
+    - Bootstrap the lazy.nvim plugin manager
+    - Install all configured plugins
+    - Set up the plugin environment
+    
+    This process typically takes 1-2 minutes depending on your internet connection.
+  </Step>
+  
+  <Step title="Wait for plugin installation">
+    Lazy.nvim will automatically open and show the installation progress. You'll see plugins being downloaded and compiled in real-time.
+    
+    Once complete, you should see a dashboard with the message:
+    
+    > "Maybe the One Piece was the commits you made along the way."
+  </Step>
+  
+  <Step title="Install LSP servers and tools">
+    nvim-luffy uses Mason to manage LSP servers and development tools. The configuration automatically installs:
+    
+    **LSP Servers:**
+    - `ts_ls` - TypeScript/JavaScript
+    - `html` - HTML
+    - `cssls` - CSS
+    - `tailwindcss` - Tailwind CSS
+    - `svelte` - Svelte
+    - `lua_ls` - Lua
+    - `graphql` - GraphQL
+    - `emmet_ls` - Emmet
+    - `prismals` - Prisma
+    - `pyright` - Python
+    - `eslint` - ESLint
+    
+    **Formatters & Linters:**
+    - Prettier
+    - Stylua
+    - Black & isort (Python)
+    - ESLint_d
+    
+    These will install automatically in the background. You can check the installation status by running:
+    
+    ```vim
+    :Mason
+    ```
+  </Step>
+</Steps>
+
+## Understanding the Bootstrap Process
+
+The magic happens in `lua/leyland/lazy.lua`, where lazy.nvim is automatically installed if not present:
+
+```lua
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable",
+		lazypath,
+	})
+end
+vim.opt.rtp:prepend(lazypath)
+```
+
+This ensures that lazy.nvim is always available, even on a fresh installation.
+
+## Post-Installation Steps
+
+### 1. Verify Installation
+
+Check that everything is working correctly:
+
+```vim
+:checkhealth
+```
+
+This will show you any potential issues with your setup.
+
+### 2. Configure Your Terminal
+
+For the best experience:
+
+- Enable true color support in your terminal
+- Install and configure a Nerd Font
+- Set your terminal font size for comfortable reading
+
+### 3. Customize Your Setup
+
+While nvim-luffy works great out of the box, you may want to:
+
+- Change the default colorscheme in `lua/leyland/plugins/colorscheme.lua` (currently set to "bamboo")
+- Adjust keybindings in `lua/leyland/core/keymaps.lua`
+- Modify LSP servers in `lua/leyland/plugins/lsp/mason.lua`
+
+<Tip>
+  The configuration is organized in a modular structure under `lua/leyland/`. Each plugin has its own file for easy customization.
+</Tip>
+
+## Directory Structure
+
+After installation, your config will look like this:
+
+```
+~/.config/nvim/
+├── init.lua                    # Entry point
+├── lua/
+│   └── leyland/
+│       ├── core/              # Core configuration
+│       │   ├── keymaps.lua    # Global keybindings
+│       │   └── options.lua    # Neovim options
+│       ├── lazy.lua           # Plugin manager setup
+│       ├── lsp.lua            # LSP configuration
+│       └── plugins/           # Plugin configurations
+│           ├── telescope.lua
+│           ├── harpoon.lua
+│           ├── nvim-tree.lua
+│           ├── nvim-cmp.lua
+│           └── ...
+```
+
+## Troubleshooting
+
+### Plugins Won't Install
+
+- Check your internet connection
+- Ensure git is installed and accessible from command line
+- Try running `:Lazy sync` to force a plugin update
+
+### LSP Servers Not Working
+
+- Run `:Mason` to check installation status
+- Ensure Node.js is installed for JavaScript-based LSP servers
+- Check `:LspInfo` to see which servers are attached to the current buffer
+
+### Icons Not Displaying
+
+- Install a Nerd Font from [nerdfonts.com](https://www.nerdfonts.com)
+- Configure your terminal to use the Nerd Font
+- Restart your terminal after changing fonts
+
+## Next Steps
+
+Now that you have nvim-luffy installed, head over to the [Quickstart Guide](/getting-started/quickstart) to learn the essential keybindings and start being productive!

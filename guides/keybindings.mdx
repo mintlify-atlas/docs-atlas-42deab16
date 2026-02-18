@@ -1,0 +1,307 @@
+---
+title: Keybindings Reference
+description: Complete reference of all keybindings in nvim-luffy
+icon: keyboard
+---
+
+## Overview
+
+This is a comprehensive reference of all keybindings configured in nvim-luffy. The leader key is set to `<Space>` by default.
+
+<Note>
+  **Leader Key**: `<Space>`
+  
+  All keybindings shown with `<leader>` use the Space key by default.
+</Note>
+
+## Core Keybindings
+
+These keybindings are defined in `lua/leyland/core/keymaps.lua`.
+
+### Window Management
+
+| Keybinding | Description |
+|------------|-------------|
+| `<leader>\|` | Split window vertically |
+| `<leader>sh` | Split window horizontally |
+
+### Buffer Management
+
+| Keybinding | Description |
+|------------|-------------|
+| `<leader>bd` | Close current buffer |
+| `<leader>ba` | Close all buffers |
+
+## Telescope Keybindings
+
+Telescope is the fuzzy finder. These keybindings are defined in `lua/leyland/plugins/telescope.lua`.
+
+### Finding Files and Content
+
+| Keybinding | Description |
+|------------|-------------|
+| `<leader><leader>` | Fuzzy find files in current working directory |
+| `<leader>fr` | Find recent files (oldfiles) |
+| `<leader>/` | Live grep - search for string in current working directory |
+| `<leader>fc` | Find string under cursor in current working directory |
+| `<leader>ft` | Find TODO comments |
+| `<leader>fk` | Find keymaps |
+
+### Telescope Insert Mode Mappings
+
+When inside Telescope's search prompt:
+
+| Keybinding | Description |
+|------------|-------------|
+| `<C-k>` | Move to previous result |
+| `<C-j>` | Move to next result |
+| `<C-q>` | Send selected items to quickfix list and open it |
+
+## Harpoon Keybindings
+
+Harpoon allows quick navigation between frequently used files. Defined in `lua/leyland/plugins/harpoon.lua`.
+
+| Keybinding | Description |
+|------------|-------------|
+| `<leader>H` | Add current file to Harpoon list |
+| `<leader>h` | Toggle Harpoon quick menu |
+| `<leader>1` | Jump to Harpoon file 1 |
+| `<leader>2` | Jump to Harpoon file 2 |
+| `<leader>3` | Jump to Harpoon file 3 |
+| `<leader>4` | Jump to Harpoon file 4 |
+| `<leader>5` | Jump to Harpoon file 5 |
+| `<leader>6` | Jump to Harpoon file 6 |
+| `<leader>7` | Jump to Harpoon file 7 |
+| `<leader>8` | Jump to Harpoon file 8 |
+| `<leader>9` | Jump to Harpoon file 9 |
+
+## File Explorer (nvim-tree) Keybindings
+
+File explorer keybindings. Defined in `lua/leyland/plugins/nvim-tree.lua`.
+
+### Global Keybinding
+
+| Keybinding | Description |
+|------------|-------------|
+| `<leader>e` | Toggle file explorer (finds and focuses current file) |
+
+### Inside nvim-tree Window
+
+These keybindings work when your cursor is in the nvim-tree window:
+
+| Keybinding | Description |
+|------------|-------------|
+| `l` | Open file or expand directory |
+| `h` | Close directory (go to parent) |
+
+<Tip>
+nvim-tree also includes many default keybindings. Press `g?` inside nvim-tree to see all available commands.
+</Tip>
+
+## LSP Keybindings
+
+Language Server Protocol keybindings for code navigation and actions. Defined in `lua/leyland/lsp.lua`.
+
+These keybindings are automatically set when an LSP server attaches to a buffer.
+
+### Navigation
+
+| Keybinding | Description |
+|------------|-------------|
+| `gR` | Show LSP references (via Telescope) |
+| `gd` | Go to definition |
+| `gi` | Show LSP implementations (via Telescope) |
+| `gt` | Show LSP type definitions (via Telescope) |
+| `K` | Show documentation for symbol under cursor |
+
+### Code Actions
+
+| Keybinding | Mode | Description |
+|------------|------|-------------|
+| `<leader>ca` | Normal, Visual | See available code actions |
+| `<leader>rn` | Normal | Smart rename symbol |
+
+### Diagnostics
+
+| Keybinding | Description |
+|------------|-------------|
+| `<leader>d` | Show diagnostics for current line (floating window) |
+| `<leader>D` | Show buffer diagnostics (via Telescope) |
+| `[d` | Go to previous diagnostic |
+| `]d` | Go to next diagnostic |
+| `<leader>xx` | Toggle Trouble diagnostics panel |
+
+### LSP Management
+
+| Keybinding | Description |
+|------------|-------------|
+| `<leader>rs` | Restart LSP server |
+
+## Flash Navigation
+
+Flash provides enhanced motion commands. Defined in `lua/leyland/plugins/flash.lua`.
+
+| Keybinding | Mode | Description |
+|------------|------|-------------|
+| `s` | Normal, Visual, Operator | Jump to any location with 2-character search |
+| `S` | Normal, Visual, Operator | Jump using treesitter nodes |
+| `r` | Operator | Remote flash for operator pending mode |
+| `R` | Visual, Operator | Treesitter search |
+| `<C-s>` | Command | Toggle flash search in command mode |
+| `<C-Space>` | Normal, Visual, Operator | Incremental treesitter selection |
+
+### Flash Character Actions
+
+After triggering flash with `s`:
+
+| Keybinding | Description |
+|------------|-------------|
+| `;` | Go to next match |
+| `,` | Go to previous match |
+
+## Git Integration
+
+### Neogit
+
+Defined in `lua/leyland/plugins/neogit.lua`.
+
+| Keybinding | Description |
+|------------|-------------|
+| `<leader>gg` | Open Neogit (floating window) |
+
+## Formatting
+
+Defined in `lua/leyland/plugins/formatting.lua`.
+
+| Keybinding | Mode | Description |
+|------------|------|-------------|
+| `<leader>mp` | Normal, Visual | Format file or selection |
+
+<Note>
+Formatting also runs automatically on save with a 3-second timeout.
+</Note>
+
+## Autocompletion (nvim-cmp)
+
+These keybindings work in insert mode when the completion menu is active. Defined in `lua/leyland/plugins/nvim-cmp.lua`.
+
+| Keybinding | Description |
+|------------|-------------|
+| `<C-k>` | Select previous suggestion |
+| `<C-j>` | Select next suggestion |
+| `<C-b>` | Scroll documentation up |
+| `<C-f>` | Scroll documentation down |
+| `<C-Space>` | Trigger completion suggestions |
+| `<C-e>` | Close completion window |
+| `<CR>` | Confirm selection (Enter) |
+| `<Tab>` | Select next item or expand snippet |
+
+## Keybinding Categories Summary
+
+<AccordionGroup>
+  <Accordion title="File Navigation" icon="folder-open">
+    - `<leader><leader>` - Find files
+    - `<leader>fr` - Recent files
+    - `<leader>e` - File explorer
+    - `<leader>h` - Harpoon menu
+    - `<leader>1-9` - Jump to Harpoon file
+  </Accordion>
+
+  <Accordion title="Search" icon="magnifying-glass">
+    - `<leader>/` - Live grep
+    - `<leader>fc` - Find word under cursor
+    - `<leader>ft` - Find TODOs
+    - `<leader>fk` - Find keymaps
+    - `s` - Flash jump
+  </Accordion>
+
+  <Accordion title="LSP & Code" icon="code">
+    - `gd` - Go to definition
+    - `gR` - Show references
+    - `gi` - Show implementations
+    - `<leader>ca` - Code actions
+    - `<leader>rn` - Rename
+    - `K` - Hover documentation
+  </Accordion>
+
+  <Accordion title="Diagnostics" icon="triangle-exclamation">
+    - `<leader>d` - Line diagnostics
+    - `<leader>D` - Buffer diagnostics
+    - `[d` - Previous diagnostic
+    - `]d` - Next diagnostic
+    - `<leader>xx` - Trouble panel
+  </Accordion>
+
+  <Accordion title="Git" icon="code-branch">
+    - `<leader>gg` - Open Neogit
+  </Accordion>
+
+  <Accordion title="Buffers & Windows" icon="window-restore">
+    - `<leader>bd` - Close buffer
+    - `<leader>ba` - Close all buffers
+    - `<leader>|` - Vertical split
+    - `<leader>sh` - Horizontal split
+  </Accordion>
+
+  <Accordion title="Formatting" icon="wand-magic-sparkles">
+    - `<leader>mp` - Format file/selection
+  </Accordion>
+</AccordionGroup>
+
+## Tips for Learning Keybindings
+
+<CardGroup cols={2}>
+  <Card title="Use Telescope Keymaps" icon="list">
+    Press `<leader>fk` to search through all available keymaps interactively.
+  </Card>
+
+  <Card title="Check Plugin Help" icon="circle-question">
+    Most plugins have built-in help. Try `g?` in nvim-tree or `?` in the Lazy UI.
+  </Card>
+
+  <Card title="Start with Essentials" icon="star">
+    Focus on file navigation and search first: `<leader><leader>`, `<leader>/`, and `<leader>e`.
+  </Card>
+
+  <Card title="Customize as Needed" icon="screwdriver-wrench">
+    Don't like a keybinding? Modify it in the respective configuration file.
+  </Card>
+</CardGroup>
+
+## Default Vim Keybindings
+
+nvim-luffy preserves most default Vim keybindings. Here are some essential ones:
+
+<Tabs>
+  <Tab title="Normal Mode">
+    - `h/j/k/l` - Move left/down/up/right
+    - `w/b` - Move word forward/backward
+    - `gg/G` - Go to top/bottom of file
+    - `0/$` - Go to start/end of line
+    - `o/O` - Insert new line below/above
+    - `dd` - Delete line
+    - `yy` - Copy line
+    - `p/P` - Paste after/before cursor
+    - `u` - Undo
+    - `<C-r>` - Redo
+  </Tab>
+
+  <Tab title="Visual Mode">
+    - `v` - Character-wise visual mode
+    - `V` - Line-wise visual mode
+    - `<C-v>` - Block-wise visual mode
+    - `y` - Yank (copy) selection
+    - `d` - Delete selection
+    - `>/<` - Indent/unindent
+  </Tab>
+
+  <Tab title="Insert Mode">
+    - `<Esc>` - Return to normal mode
+    - `<C-w>` - Delete word backward
+    - `<C-h>` - Delete character backward
+  </Tab>
+</Tabs>
+
+<Info>
+For a complete list of all keybindings, including those from plugins, run `:Telescope keymaps` in Neovim.
+</Info>

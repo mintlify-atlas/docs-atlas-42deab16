@@ -1,0 +1,155 @@
+---
+title: 'Options'
+description: 'Core Neovim options and editor settings'
+---
+
+## Overview
+
+The `options.lua` file configures the core behavior of Neovim, including line numbers, indentation, search behavior, and split window management. These settings provide a solid foundation for a modern editing experience.
+
+## Editor Settings
+
+### Line Numbers
+
+<ParamField path="relativenumber" type="boolean" default="true">
+  Displays relative line numbers, making it easier to use motions like `10j` or `5k`
+</ParamField>
+
+<ParamField path="number" type="boolean" default="true">
+  Shows absolute line number for the current line (works in combination with relativenumber)
+</ParamField>
+
+### Interface Options
+
+<ParamField path="cmdheight" type="number" default="0">
+  Hides the command line when not in use, providing a cleaner interface
+</ParamField>
+
+<ParamField path="laststatus" type="number" default="0">
+  Hides the statusline completely for a minimal look
+</ParamField>
+
+<ParamField path="winbar" type="string" default="%f %h%m%r%=%l,%c %P">
+  Displays file info, line/column numbers, and position in the window bar
+</ParamField>
+
+<ParamField path="signcolumn" type="string" default="yes">
+  Always shows the sign column to prevent text shifting when diagnostics appear
+</ParamField>
+
+## Tabs and Indentation
+
+<ParamField path="tabstop" type="number" default="2">
+  Sets the width of a tab character to 2 spaces
+</ParamField>
+
+<ParamField path="shiftwidth" type="number" default="2">
+  Uses 2 spaces for each indentation level
+</ParamField>
+
+<ParamField path="expandtab" type="boolean" default="true">
+  Converts tabs to spaces automatically
+</ParamField>
+
+<ParamField path="autoindent" type="boolean" default="true">
+  Copies the indent from the current line when starting a new line
+</ParamField>
+
+<ParamField path="wrap" type="boolean" default="false">
+  Disables line wrapping for long lines
+</ParamField>
+
+## Search Settings
+
+<ParamField path="ignorecase" type="boolean" default="true">
+  Makes searches case-insensitive by default
+</ParamField>
+
+<ParamField path="smartcase" type="boolean" default="true">
+  Overrides ignorecase when search pattern contains uppercase letters
+</ParamField>
+
+## Split Windows
+
+<ParamField path="splitright" type="boolean" default="true">
+  Opens vertical splits to the right of the current window
+</ParamField>
+
+<ParamField path="splitbelow" type="boolean" default="true">
+  Opens horizontal splits below the current window
+</ParamField>
+
+## Clipboard Integration
+
+<ParamField path="clipboard" type="string" default="unnamedplus">
+  Uses the system clipboard as the default register, allowing seamless copy/paste between Neovim and other applications
+</ParamField>
+
+## File Management
+
+<ParamField path="swapfile" type="boolean" default="false">
+  Disables swap files to avoid clutter
+</ParamField>
+
+<ParamField path="backspace" type="string" default="indent,eol,start">
+  Allows backspace to work on indentation, line breaks, and start of insert
+</ParamField>
+
+## LSP Configuration
+
+<ParamField path="lsp.log_level" type="string" default="error">
+  Sets LSP logging to only show errors, reducing noise from warnings
+</ParamField>
+
+## Source Code
+
+Here's the complete configuration from `lua/leyland/core/options.lua`:
+
+```lua
+vim.cmd("let g:netrw_liststyle = 3")
+local opt = vim.opt
+opt.relativenumber = true
+opt.cmdheight = 0
+opt.laststatus = 0 -- Hide the statusline
+opt.winbar = "%f %h%m%r%=%l,%c %P"
+opt.number = true
+
+-- tabs & indentation
+opt.tabstop = 2
+opt.shiftwidth = 2 -- 2 spaces for indent width
+opt.expandtab = true -- expand tab to spaces
+opt.autoindent = true -- copy indent of current line to new line
+-- :h autoindent for help
+
+opt.wrap = false
+
+-- search settings
+opt.ignorecase = true -- case insensitive search
+opt.smartcase = true -- uses mixed case for case sensitive search
+
+-- opt.cursorline = true
+
+opt.swapfile = false
+-- turn on termguicolors for tokyonight colorscheme to work
+
+-- opt.termguicolors = true
+opt.background = "dark" -- colorschemes can be light or dark
+opt.signcolumn = "yes" -- show sign column so that text doesnt shift
+
+-- backspace
+opt.backspace = "indent,eol,start" -- allow backspace on indent, end of line or insert mode start position
+
+-- clipboard
+opt.clipboard:append("unnamedplus") -- use system clipboard as default register
+
+-- split windows
+opt.splitright = true -- split vertical window to the right
+opt.splitbelow = true -- split horizontal window to the bottom
+
+-- LSP
+vim.lsp.set_log_level("error") -- Only show errors, not warnings
+```
+
+<Tip>
+You can view help for any option in Neovim by running `:h <option-name>`, for example `:h autoindent`
+</Tip>

@@ -1,0 +1,457 @@
+---
+title: 'Harpoon'
+description: 'Lightning-fast navigation to your most important files'
+icon: 'anchor'
+---
+
+## Overview
+
+[Harpoon](https://github.com/ThePrimeagen/harpoon) is a navigation plugin created by ThePrimeagen that allows you to mark files and quickly jump between them. Think of it as bookmarks for your most frequently accessed files in a project.
+
+<Note>
+Harpoon is perfect for maintaining focus on the 4-9 files you're actively working with, without getting distracted by file trees or fuzzy finders.
+</Note>
+
+## Why Harpoon?
+
+Unlike traditional file navigation:
+
+- **Fast**: Jump to any marked file with a single keypress
+- **Contextual**: Each project has its own harpoon list
+- **Minimal**: Only the files you care about, nothing else
+- **Persistent**: Marks survive between sessions
+
+## Installation
+
+From `lua/leyland/plugins/harpoon.lua`:
+
+```lua
+return {
+  "ThePrimeagen/harpoon",
+  branch = "harpoon2",
+  opts = {
+    menu = {
+      width = vim.api.nvim_win_get_width(0) - 4,
+    },
+    settings = {
+      save_on_toggle = true,
+    },
+  },
+}
+```
+
+<Warning>
+nvim-luffy uses Harpoon 2, which has a different API from Harpoon 1. Make sure you're using the `harpoon2` branch.
+</Warning>
+
+## Configuration
+
+### Menu Width
+
+```lua
+menu = {
+  width = vim.api.nvim_win_get_width(0) - 4,
+}
+```
+
+The harpoon menu is dynamically sized to match your window width minus 4 characters for padding.
+
+### Auto-Save
+
+```lua
+settings = {
+  save_on_toggle = true,
+}
+```
+
+Harpoon automatically saves your marks whenever you toggle the menu, ensuring persistence.
+
+## Keybindings
+
+All keybindings use `<leader>` (Space) as the prefix:
+
+### Core Actions
+
+| Keybinding | Action | Description |
+|------------|--------|-------------|
+| `<leader>H` | Add file to Harpoon | Mark current file |
+| `<leader>h` | Toggle Harpoon menu | Show all marked files |
+
+<CodeGroup>
+```lua Add File
+{
+  "<leader>H",
+  function()
+    require("harpoon"):list():add()
+  end,
+  desc = "Harpoon File",
+}
+```
+
+```lua Toggle Menu
+{
+  "<leader>h",
+  function()
+    local harpoon = require("harpoon")
+    harpoon.ui:toggle_quick_menu(harpoon:list())
+  end,
+  desc = "Harpoon Quick Menu",
+}
+```
+</CodeGroup>
+
+### Quick Jump Keys
+
+Jump directly to harpooned files by position:
+
+| Keybinding | Action |
+|------------|---------|
+| `<leader>1` | Jump to file 1 |
+| `<leader>2` | Jump to file 2 |
+| `<leader>3` | Jump to file 3 |
+| `<leader>4` | Jump to file 4 |
+| `<leader>5` | Jump to file 5 |
+| `<leader>6` | Jump to file 6 |
+| `<leader>7` | Jump to file 7 |
+| `<leader>8` | Jump to file 8 |
+| `<leader>9` | Jump to file 9 |
+
+```lua:lua/leyland/plugins/harpoon.lua
+for i = 1, 9 do
+  table.insert(keys, {
+    "<leader>" .. i,
+    function()
+      require("harpoon"):list():select(i)
+    end,
+    desc = "Harpoon to File " .. i,
+  })
+end
+```
+
+<Note>
+You can harpoon up to 9 files per project for instant access!
+</Note>
+
+## Usage Guide
+
+### Basic Workflow
+
+<Steps>
+  <Step title="Mark Your Files">
+    Open a file you want to harpoon and press `<Space>H`
+    
+    ```lua
+    -- In src/components/Button.tsx
+    <Space>H  -- Marked!
+    ```
+  </Step>
+  
+  <Step title="Mark More Files">
+    Navigate to other important files and harpoon them too:
+    
+    ```bash
+    1. src/components/Button.tsx    # <Space>H
+    2. src/utils/api.ts              # <Space>H
+    3. src/pages/Home.tsx            # <Space>H
+    4. src/App.tsx                   # <Space>H
+    ```
+  </Step>
+  
+  <Step title="View Harpoon Menu">
+    Press `<Space>h` to see all harpooned files:
+    
+    ```
+    Harpoon
+    ─────────────────────────────────────
+    1  src/components/Button.tsx
+    2  src/utils/api.ts
+    3  src/pages/Home.tsx
+    4  src/App.tsx
+    ```
+  </Step>
+  
+  <Step title="Jump Between Files">
+    Use number keys to instantly jump:
+    
+    ```
+    <Space>1  → Button.tsx
+    <Space>2  → api.ts
+    <Space>3  → Home.tsx
+    <Space>4  → App.tsx
+    ```
+  </Step>
+</Steps>
+
+### Harpoon Menu Navigation
+
+Inside the Harpoon menu:
+
+| Key | Action |
+|-----|--------|
+| `j` / `<Down>` | Move down |
+| `k` / `<Up>` | Move up |
+| `<CR>` | Open selected file |
+| `dd` | Remove file from list |
+| `<Esc>` | Close menu |
+
+<Tabs>
+  <Tab title="Opening Files">
+    Navigate with `j`/`k` and press `<Enter>` to open:
+    
+    ```
+    1  Button.tsx
+    2  api.ts        ← cursor here
+    3  Home.tsx
+    
+    Press <Enter> → Opens api.ts
+    ```
+  </Tab>
+  
+  <Tab title="Removing Files">
+    Navigate to a file and press `dd` to remove:
+    
+    ```
+    1  Button.tsx
+    2  api.ts        ← dd here
+    3  Home.tsx
+    
+    Result:
+    1  Button.tsx
+    2  Home.tsx      ← numbers shift up
+    ```
+  </Tab>
+  
+  <Tab title="Reordering">
+    Use visual mode to move files:
+    
+    ```
+    1. Visual select line(s) with V
+    2. Cut with d
+    3. Navigate to new position
+    4. Paste with p
+    ```
+  </Tab>
+</Tabs>
+
+## Practical Examples
+
+### Example 1: Feature Development
+
+Working on a new authentication feature:
+
+```bash
+<Space>H on:
+1. src/features/auth/LoginForm.tsx      # UI component
+2. src/features/auth/authService.ts     # Business logic  
+3. src/features/auth/authSlice.ts       # State management
+4. src/features/auth/LoginForm.test.tsx # Tests
+```
+
+Now cycle through these with `<Space>1-4` while developing!
+
+### Example 2: Bug Hunting
+
+Debugging a bug across multiple files:
+
+```bash
+<Space>H on:
+1. src/utils/parser.ts      # Where bug occurs
+2. src/utils/validator.ts   # Related validation
+3. tests/parser.test.ts     # Failing test
+4. src/types/index.ts       # Type definitions
+```
+
+### Example 3: Configuration Files
+
+Quick access to project config:
+
+```bash
+<Space>H on:
+1. package.json
+2. tsconfig.json
+3. .eslintrc.js
+4. vite.config.ts
+```
+
+## Workflow Tips
+
+<Accordion title="Start of Day Setup">
+When starting work on a feature, immediately harpoon the files you'll be working with. This creates a focused workspace.
+
+```bash
+# Day 1: User profile feature
+<Space>H on UserProfile.tsx
+<Space>H on userService.ts
+<Space>H on UserProfile.test.tsx
+
+# Now <Space>1-3 for instant access all day!
+```
+</Accordion>
+
+<Accordion title="Context Switching">
+Harpoon lists are per-project, so switching projects automatically switches your harpoon context.
+
+```bash
+project-a/
+  Harpoon: [Button.tsx, api.ts, App.tsx]
+
+project-b/
+  Harpoon: [server.go, routes.go, main.go]
+```
+</Accordion>
+
+<Accordion title="Combine with Telescope">
+Use Telescope for exploring, Harpoon for focus:
+
+1. `<Space><Space>` - Find a file with Telescope
+2. `<Space>H` - Harpoon it if you'll use it often
+3. `<Space>1-9` - Jump back to it anytime
+
+Telescope = exploration, Harpoon = exploitation
+</Accordion>
+
+<Accordion title="Clean Your List">
+Periodically clean up your harpoon list:
+
+1. `<Space>h` - Open menu
+2. `dd` on files you're done with
+3. Keeps numbers 1-4 for your most active files
+</Accordion>
+
+## Advanced Usage
+
+### Check Current Position
+
+When in a harpooned file, the menu shows your current position:
+
+```
+Harpoon
+─────────────────────────────────────
+1  Button.tsx
+2  api.ts          ← (current)
+3  Home.tsx
+4  App.tsx
+```
+
+### Maximum Files
+
+While you can harpoon up to 9 files, most workflows benefit from 3-5:
+
+- **3-4 files**: Sweet spot for focused work
+- **5-7 files**: Larger feature or bug fix
+- **8-9 files**: Complex refactoring
+
+<Warning>
+Too many harpooned files defeats the purpose. Keep it minimal for maximum effectiveness.
+</Warning>
+
+## Harpoon vs Other Navigation
+
+| Tool | Best For | Speed |
+|------|----------|-------|
+| **Harpoon** | Frequently accessed files | Instant |
+| **Telescope** | Finding files by name | Fast |
+| **nvim-tree** | Visual file browsing | Slower |
+| **Buffers** | Recently opened files | Medium |
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Harpoon marks not persisting">
+    Check that `save_on_toggle` is enabled:
+    
+    ```lua
+    settings = {
+      save_on_toggle = true,
+    }
+    ```
+    
+    Marks are saved when you toggle the menu with `<Space>h`.
+  </Accordion>
+  
+  <Accordion title="Wrong file opens with <leader>1">
+    Remember that numbers correspond to list position, not the file itself. If you remove a file, numbers shift:
+    
+    ```
+    Before removing:
+    1. Button.tsx
+    2. api.ts        ← remove this
+    3. Home.tsx
+    
+    After removing:
+    1. Button.tsx
+    2. Home.tsx      ← now at position 2
+    ```
+  </Accordion>
+  
+  <Accordion title="Harpoon menu is too small">
+    The menu width is calculated dynamically. If it's too small, try:
+    
+    1. Maximizing your Neovim window
+    2. Adjusting the width calculation in the config:
+    
+    ```lua
+    menu = {
+      width = 60,  -- Fixed width instead of dynamic
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Integration with Workflow
+
+### With Git
+
+Harpoon the files you're modifying:
+
+```bash
+# Check what you're changing
+git status
+
+# Harpoon those files
+<Space>H on each modified file
+
+# Work through them with <Space>1-4
+```
+
+### With LSP
+
+Use LSP to find definitions, then harpoon them:
+
+```bash
+1. gd to go to definition
+2. <Space>H to harpoon that file
+3. <Space>[number] to jump back anytime
+```
+
+### With Splits
+
+Harpoon works great with splits:
+
+```bash
+<Space>|          # Vertical split
+<Space>1          # Harpoon file 1 in left split
+<C-w>l            # Move to right split  
+<Space>2          # Harpoon file 2 in right split
+
+# Now compare files side-by-side!
+```
+
+## Related Plugins
+
+<CardGroup cols={2}>
+  <Card title="Telescope" icon="magnifying-glass" href="/plugins/telescope">
+    Discover files, then harpoon them
+  </Card>
+  
+  <Card title="nvim-tree" icon="folder-tree" href="/plugins/nvim-tree">
+    Visual navigation complement
+  </Card>
+</CardGroup>
+
+## Source Code
+
+View the full configuration:
+```
+lua/leyland/plugins/harpoon.lua
+```

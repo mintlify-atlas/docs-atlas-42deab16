@@ -1,0 +1,377 @@
+---
+title: Complete Plugin List
+description: Every plugin installed in nvim-luffy with descriptions and versions
+icon: puzzle-piece
+---
+
+## Overview
+
+This page lists all 42 plugins installed in nvim-luffy, organized by category. Plugin versions are locked in `lazy-lock.json` to ensure reproducible builds.
+
+<Note>
+  Versions shown are commit hashes from the lock file. Run `:Lazy update` to update plugins.
+</Note>
+
+## Plugin Manager
+
+<CardGroup cols={1}>
+  <Card title="lazy.nvim" icon="rocket" href="https://github.com/folke/lazy.nvim">
+    **Purpose**: Modern plugin manager for Neovim with lazy loading capabilities  
+    **Branch**: main  
+    **Commit**: `306a055`
+  </Card>
+</CardGroup>
+
+## LSP & Language Tools
+
+<CardGroup cols={2}>
+  <Card title="nvim-lspconfig" icon="code" href="https://github.com/neovim/nvim-lspconfig">
+    **Purpose**: Quickstart configs for Neovim LSP  
+    **Commit**: `44acfe8`
+  </Card>
+  
+  <Card title="mason.nvim" icon="toolbox" href="https://github.com/williamboman/mason.nvim">
+    **Purpose**: Package manager for LSP servers, formatters, and linters  
+    **Commit**: `44d1e90`
+  </Card>
+  
+  <Card title="mason-lspconfig.nvim" icon="link" href="https://github.com/williamboman/mason-lspconfig.nvim">
+    **Purpose**: Bridge between mason.nvim and lspconfig  
+    **Commit**: `21c2a84`
+  </Card>
+  
+  <Card title="mason-tool-installer.nvim" icon="download" href="https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim">
+    **Purpose**: Automatically install tools via mason.nvim  
+    **Commit**: `443f1ef`
+  </Card>
+  
+  <Card title="nvim-lsp-file-operations" icon="file" href="https://github.com/antosha417/nvim-lsp-file-operations">
+    **Purpose**: File operation support for LSP (rename, move, etc.)  
+    **Commit**: `b9c795d`
+  </Card>
+  
+  <Card title="lazydev.nvim" icon="laptop-code" href="https://github.com/folke/lazydev.nvim">
+    **Purpose**: Faster Neovim plugin development with proper LSP setup  
+    **Commit**: `5231c62`
+  </Card>
+</CardGroup>
+
+### LSP Servers Installed
+
+<AccordionGroup>
+  <Accordion title="Language Servers (via Mason)">
+    - **ts_ls**: TypeScript/JavaScript
+    - **html**: HTML
+    - **cssls**: CSS
+    - **tailwindcss**: Tailwind CSS
+    - **svelte**: Svelte
+    - **lua_ls**: Lua
+    - **graphql**: GraphQL
+    - **emmet_ls**: Emmet
+    - **prismals**: Prisma
+    - **pyright**: Python
+    - **eslint**: ESLint
+  </Accordion>
+  
+  <Accordion title="Formatters & Linters (via Mason)">
+    - **prettier**: JavaScript/TypeScript/CSS formatter
+    - **stylua**: Lua formatter
+    - **isort**: Python import sorter
+    - **black**: Python formatter
+    - **pylint**: Python linter
+    - **eslint_d**: Fast ESLint daemon
+  </Accordion>
+</AccordionGroup>
+
+## Completion & Snippets
+
+<CardGroup cols={2}>
+  <Card title="nvim-cmp" icon="text" href="https://github.com/hrsh7th/nvim-cmp">
+    **Purpose**: Completion engine plugin for Neovim  
+    **Commit**: `da88697`
+  </Card>
+  
+  <Card title="cmp-nvim-lsp" icon="server" href="https://github.com/hrsh7th/cmp-nvim-lsp">
+    **Purpose**: LSP source for nvim-cmp  
+    **Commit**: `cbc7b02`
+  </Card>
+  
+  <Card title="cmp-buffer" icon="file-alt" href="https://github.com/hrsh7th/cmp-buffer">
+    **Purpose**: Buffer text completion source  
+    **Commit**: `b74fab3`
+  </Card>
+  
+  <Card title="cmp-path" icon="folder" href="https://github.com/hrsh7th/cmp-path">
+    **Purpose**: File path completion source  
+    **Commit**: `c642487`
+  </Card>
+  
+  <Card title="LuaSnip" icon="code" href="https://github.com/L3MON4D3/LuaSnip">
+    **Purpose**: Snippet engine for Neovim written in Lua  
+    **Commit**: `5a1e392`
+  </Card>
+  
+  <Card title="cmp_luasnip" icon="link" href="https://github.com/saadparwaiz1/cmp_luasnip">
+    **Purpose**: LuaSnip completion source for nvim-cmp  
+    **Commit**: `98d9cb5`
+  </Card>
+  
+  <Card title="friendly-snippets" icon="heart" href="https://github.com/rafamadriz/friendly-snippets">
+    **Purpose**: Collection of useful snippets for multiple languages  
+    **Commit**: `6cd7280`
+  </Card>
+  
+  <Card title="lspkind.nvim" icon="icons" href="https://github.com/onsails/lspkind.nvim">
+    **Purpose**: VS Code-like pictograms for completion menu  
+    **Commit**: `c7274c4`
+  </Card>
+</CardGroup>
+
+## Fuzzy Finder & Navigation
+
+<CardGroup cols={2}>
+  <Card title="telescope.nvim" icon="search" href="https://github.com/nvim-telescope/telescope.nvim">
+    **Purpose**: Highly extendable fuzzy finder over lists  
+    **Branch**: 0.1.x  
+    **Commit**: `a0bbec2`
+  </Card>
+  
+  <Card title="telescope-fzf-native.nvim" icon="bolt" href="https://github.com/nvim-telescope/telescope-fzf-native.nvim">
+    **Purpose**: FZF sorter for telescope written in C  
+    **Commit**: `6fea601`
+  </Card>
+  
+  <Card title="harpoon" icon="bookmark" href="https://github.com/ThePrimeagen/harpoon">
+    **Purpose**: Quick file navigation and marking  
+    **Branch**: harpoon2  
+    **Commit**: `87b1a35`
+  </Card>
+  
+  <Card title="flash.nvim" icon="bolt" href="https://github.com/folke/flash.nvim">
+    **Purpose**: Enhanced motion plugin for jumping to locations  
+    **Commit**: `fcea7ff`
+  </Card>
+  
+  <Card title="fzf-lua" icon="filter" href="https://github.com/ibhagwan/fzf-lua">
+    **Purpose**: Alternative fuzzy finder using fzf  
+    **Commit**: `5921997`
+  </Card>
+  
+  <Card title="mini.pick" icon="hand-pointer" href="https://github.com/echasnovski/mini.pick">
+    **Purpose**: Minimal picker/finder implementation  
+    **Commit**: `4ad37ad`
+  </Card>
+</CardGroup>
+
+## File Explorer & Management
+
+<CardGroup cols={2}>
+  <Card title="nvim-tree.lua" icon="folder-tree" href="https://github.com/nvim-tree/nvim-tree.lua">
+    **Purpose**: File explorer tree for Neovim  
+    **Commit**: `516f95e`
+  </Card>
+  
+  <Card title="nvim-web-devicons" icon="icons" href="https://github.com/nvim-tree/nvim-web-devicons">
+    **Purpose**: File type icons for Neovim plugins  
+    **Commit**: `746ffbb`
+  </Card>
+</CardGroup>
+
+## Git Integration
+
+<CardGroup cols={2}>
+  <Card title="neogit" icon="git" href="https://github.com/NeogitOrg/neogit">
+    **Purpose**: Magit-like Git interface for Neovim  
+    **Commit**: `9104991`
+  </Card>
+  
+  <Card title="diffview.nvim" icon="code-compare" href="https://github.com/sindrets/diffview.nvim">
+    **Purpose**: Tabpage interface for cycling through diffs  
+    **Commit**: `4516612`
+  </Card>
+</CardGroup>
+
+## Syntax & Parsing
+
+<CardGroup cols={1}>
+  <Card title="nvim-treesitter" icon="tree" href="https://github.com/nvim-treesitter/nvim-treesitter">
+    **Purpose**: Treesitter configurations and abstraction layer  
+    **Commit**: `42fc28b`  
+    
+    **Languages Configured**:  
+    JSON, JavaScript, TypeScript, TSX, YAML, HTML, CSS, Prisma, Markdown, Svelte, GraphQL, Bash, Lua, Vim, Dockerfile, C
+  </Card>
+</CardGroup>
+
+## Formatting & Code Quality
+
+<CardGroup cols={1}>
+  <Card title="conform.nvim" icon="code" href="https://github.com/stevearc/conform.nvim">
+    **Purpose**: Lightweight formatter plugin with format-on-save  
+    **Commit**: `c2526f1`  
+    
+    **Configured Formatters**:  
+    Prettier (JS/TS/CSS/HTML/JSON/YAML/Markdown), Stylua (Lua), Black/Isort (Python)
+  </Card>
+</CardGroup>
+
+## Diagnostics & Debugging
+
+<CardGroup cols={2}>
+  <Card title="trouble.nvim" icon="triangle-exclamation" href="https://github.com/folke/trouble.nvim">
+    **Purpose**: Pretty list for diagnostics, references, quickfix, etc.  
+    **Commit**: `bd67efe`
+  </Card>
+  
+  <Card title="todo-comments.nvim" icon="comment" href="https://github.com/folke/todo-comments.nvim">
+    **Purpose**: Highlight and search for TODO comments  
+    **Commit**: `31e3c38`
+  </Card>
+</CardGroup>
+
+## UI & Appearance
+
+### Color Schemes
+
+<CardGroup cols={2}>
+  <Card title="bamboo.nvim" icon="palette" href="https://github.com/ribru17/bamboo.nvim">
+    **Purpose**: Warm green theme (default active theme)  
+    **Commit**: `1309bc8`
+  </Card>
+  
+  <Card title="catppuccin" icon="palette" href="https://github.com/catppuccin/nvim">
+    **Purpose**: Soothing pastel theme  
+    **Commit**: `0a5de4d`
+  </Card>
+  
+  <Card title="tokyonight.nvim" icon="palette" href="https://github.com/folke/tokyonight.nvim">
+    **Purpose**: Clean, dark theme inspired by Tokyo at night  
+    **Commit**: `5da1b76`
+  </Card>
+  
+  <Card title="modus-themes.nvim" icon="palette" href="https://github.com/miikanissi/modus-themes.nvim">
+    **Purpose**: Highly accessible themes with WCAG AAA contrast  
+    **Commit**: `c57c2c5`
+  </Card>
+  
+  <Card title="onedark.nvim" icon="palette" href="https://github.com/navarasu/onedark.nvim">
+    **Purpose**: Atom's iconic One Dark theme  
+    **Commit**: `213c23a`
+  </Card>
+  
+  <Card title="rose-pine" icon="palette" href="https://github.com/rose-pine/neovim">
+    **Purpose**: Soho vibes for Neovim  
+    **Commit**: `cf2a288`
+  </Card>
+</CardGroup>
+
+### UI Enhancements
+
+<CardGroup cols={2}>
+  <Card title="alpha-nvim" icon="home" href="https://github.com/goolord/alpha-nvim">
+    **Purpose**: Fast and customizable start screen  
+    **Commit**: `a9d8fb7`
+  </Card>
+  
+  <Card title="snacks.nvim" icon="cookie" href="https://github.com/folke/snacks.nvim">
+    **Purpose**: Collection of small QoL improvements (smooth scrolling, etc.)  
+    **Commit**: `fe7cfe9`
+  </Card>
+</CardGroup>
+
+## Editing Enhancements
+
+<CardGroup cols={2}>
+  <Card title="nvim-autopairs" icon="brackets-curly" href="https://github.com/windwp/nvim-autopairs">
+    **Purpose**: Auto-close and auto-pair brackets, quotes, etc.  
+    **Commit**: `59bce2e`
+  </Card>
+  
+  <Card title="vim-tmux-navigator" icon="terminal" href="https://github.com/christoomey/vim-tmux-navigator">
+    **Purpose**: Seamless navigation between tmux panes and vim splits  
+    **Commit**: `e41c431`
+  </Card>
+</CardGroup>
+
+## Core Dependencies
+
+<CardGroup cols={1}>
+  <Card title="plenary.nvim" icon="box" href="https://github.com/nvim-lua/plenary.nvim">
+    **Purpose**: Lua utility functions used by many plugins  
+    **Commit**: `b9fd522`
+  </Card>
+</CardGroup>
+
+## Plugin Categories Summary
+
+<CardGroup cols={3}>
+  <Card title="LSP & Language" icon="code">
+    6 plugins
+  </Card>
+  
+  <Card title="Completion" icon="text">
+    8 plugins
+  </Card>
+  
+  <Card title="Navigation" icon="compass">
+    6 plugins
+  </Card>
+  
+  <Card title="File Management" icon="folder">
+    2 plugins
+  </Card>
+  
+  <Card title="Git Tools" icon="git">
+    2 plugins
+  </Card>
+  
+  <Card title="UI & Themes" icon="palette">
+    8 plugins
+  </Card>
+  
+  <Card title="Editing" icon="pen">
+    2 plugins
+  </Card>
+  
+  <Card title="Diagnostics" icon="bug">
+    2 plugins
+  </Card>
+  
+  <Card title="Core" icon="box">
+    6 plugins
+  </Card>
+</CardGroup>
+
+## Managing Plugins
+
+### Lazy.nvim Commands
+
+<CodeGroup>
+```vim Update All Plugins
+:Lazy update
+```
+
+```vim Sync Plugins
+:Lazy sync
+```
+
+```vim Check Plugin Health
+:Lazy health
+```
+
+```vim View Plugin Status
+:Lazy
+```
+</CodeGroup>
+
+### Lock File
+
+The `lazy-lock.json` file ensures all contributors use the same plugin versions:
+
+<Info>
+  Commit the lock file to version control to maintain consistency across environments.
+</Info>
+
+<Tip>
+  To add a new plugin, create a file in `lua/leyland/plugins/` returning a lazy.nvim spec. The plugin will be automatically detected and installed.
+</Tip>

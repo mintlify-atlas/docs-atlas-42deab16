@@ -1,0 +1,373 @@
+---
+title: Adding Plugins
+description: Learn how to add new plugins to nvim-luffy using lazy.nvim
+icon: puzzle-piece
+---
+
+## Overview
+
+nvim-luffy uses [lazy.nvim](https://github.com/folke/lazy.nvim) as its plugin manager. This guide will show you how to add new plugins to your configuration.
+
+## Understanding Lazy.nvim Plugin Specification
+
+Lazy.nvim uses a simple table-based format for plugin specifications. Here's the basic structure:
+
+```lua
+return {
+  "username/repository-name",
+  -- Optional fields:
+  dependencies = { "other/plugin" },  -- Plugins this depends on
+  lazy = false,                        -- Load immediately vs lazy load
+  event = "VeryLazy",                  -- Load on specific event
+  keys = { "<leader>k" },              -- Load when key is pressed
+  cmd = "CommandName",                 -- Load when command is run
+  ft = "filetype",                     -- Load for specific filetype
+  config = function()                  -- Configuration function
+    -- Plugin setup code
+  end,
+  opts = {},                           -- Options passed to setup()
+}
+```
+
+## Where to Add Plugin Files
+
+All plugin configurations are stored in `lua/leyland/plugins/`. You can:
+
+1. **Add to an existing file** - If it's related to existing plugins
+2. **Create a new file** - For new, standalone plugins (recommended)
+
+Lazy.nvim automatically loads all Lua files in the `lua/leyland/plugins/` directory.
+
+<Tip>
+Create separate files for each plugin to keep your configuration organized and maintainable.
+</Tip>
+
+## Step-by-Step: Adding a New Plugin
+
+<Steps>
+  <Step title="Create Plugin Configuration File">
+    Create a new file in `lua/leyland/plugins/` with a descriptive name:
+    
+    ```bash
+    touch lua/leyland/plugins/new-plugin.lua
+    ```
+  </Step>
+
+  <Step title="Define Plugin Specification">
+    Add the plugin specification to the file:
+    
+    ```lua lua/leyland/plugins/new-plugin.lua
+    return {
+      "username/plugin-name",
+      lazy = false,
+      config = function()
+        -- Plugin configuration here
+      end,
+    }
+    ```
+  </Step>
+
+  <Step title="Install the Plugin">
+    Restart Neovim or run:
+    
+    ```vim
+    :Lazy
+    ```
+    
+    Then press `I` to install new plugins.
+  </Step>
+
+  <Step title="Configure Plugin Settings">
+    Add any necessary keybindings, options, or setup code in the `config` function.
+  </Step>
+</Steps>
+
+## Plugin Configuration Patterns
+
+### Pattern 1: Simple Plugin with Opts
+
+Many plugins work by passing options to a `setup()` function:
+
+```lua
+return {
+  "folke/snacks.nvim",
+  priority = 1000,
+  lazy = false,
+  opts = {
+    scroll = {
+      enabled = true,
+      animate = {
+        duration = { step = 10, total = 100 },
+        easing = "linear",
+      },
+    },
+  },
+}
+```
+
+The `opts` table is automatically passed to `require("plugin").setup(opts)`.
+
+### Pattern 2: Plugin with Config Function
+
+For more complex setups, use a `config` function:
+
+```lua
+return {
+  "nvim-telescope/telescope.nvim",
+  branch = "0.1.x",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+  },
+  config = function()
+    local telescope = require("telescope")
+    local actions = require("telescope.actions")
+
+    telescope.setup({
+      defaults = {
+        path_display = { "filename_first" },
+        mappings = {
+          i = {
+            ["<C-k>"] = actions.move_selection_previous,
+            ["<C-j>"] = actions.move_selection_next,
+          },
+        },
+      },
+    })
+
+    -- Set keymaps
+    local keymap = vim.keymap
+    keymap.set("n", "<leader><leader>", "<cmd>Telescope find_files<cr>")
+  end,
+}
+```
+
+### Pattern 3: Lazy Loading with Keys
+
+Load plugins only when specific keys are pressed:
+
+```lua
+return {
+  "ThePrimeagen/harpoon",
+  branch = "harpoon2",
+  opts = {
+    menu = {
+      width = vim.api.nvim_win_get_width(0) - 4,
+    },
+  },
+  keys = function()
+    return {
+      {
+        "<leader>H",
+        function()
+          require("harpoon"):list():add()
+        end,
+        desc = "Harpoon File",
+      },
+      {
+        "<leader>h",
+        function()
+          local harpoon = require("harpoon")
+          harpoon.ui:toggle_quick_menu(harpoon:list())
+        end,
+        desc = "Harpoon Quick Menu",
+      },
+    }
+  end,
+}
+```
+
+### Pattern 4: Lazy Loading with Commands
+
+Load plugins only when specific commands are run:
+
+```lua
+return {
+  "NeogitOrg/neogit",
+  lazy = true,
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "sindrets/diffview.nvim",
+    "nvim-telescope/telescope.nvim",
+  },
+  cmd = "Neogit",
+  keys = {
+    {
+      "<leader>gg",
+      function()
+        require("neogit").open({ kind = "floating" })
+      end,
+      desc = "Neogit (floating)",
+    },
+  },
+}
+```
+
+### Pattern 5: Event-Based Loading
+
+Load plugins on specific Neovim events:
+
+```lua
+return {
+  "stevearc/conform.nvim",
+  event = { "BufReadPre", "BufNewFile" },
+  config = function()
+    local conform = require("conform")
+    
+    conform.setup({
+      formatters_by_ft = {
+        javascript = { "prettier" },
+        lua = { "stylua" },
+        python = { "isort", "black" },
+      },
+      format_on_save = {
+        lsp_fallback = true,
+        async = false,
+        timeout_ms = 3000,
+      },
+    })
+  end,
+}
+```
+
+## Real Example: Adding a Markdown Preview Plugin
+
+Let's add a markdown preview plugin step by step:
+
+<Tabs>
+  <Tab title="Step 1: Create File">
+    Create `lua/leyland/plugins/markdown-preview.lua`:
+    
+    ```lua
+    return {
+      "iamcco/markdown-preview.nvim",
+    }
+    ```
+  </Tab>
+
+  <Tab title="Step 2: Add Build Command">
+    This plugin needs to be built after installation:
+    
+    ```lua
+    return {
+      "iamcco/markdown-preview.nvim",
+      build = "cd app && npm install",
+      ft = "markdown",  -- Only load for markdown files
+    }
+    ```
+  </Tab>
+
+  <Tab title="Step 3: Add Keybindings">
+    Add convenient keybindings:
+    
+    ```lua
+    return {
+      "iamcco/markdown-preview.nvim",
+      build = "cd app && npm install",
+      ft = "markdown",
+      keys = {
+        {
+          "<leader>mp",
+          "<cmd>MarkdownPreviewToggle<cr>",
+          desc = "Toggle Markdown Preview",
+        },
+      },
+    }
+    ```
+  </Tab>
+
+  <Tab title="Step 4: Add Configuration">
+    Configure plugin options:
+    
+    ```lua
+    return {
+      "iamcco/markdown-preview.nvim",
+      build = "cd app && npm install",
+      ft = "markdown",
+      keys = {
+        {
+          "<leader>mp",
+          "<cmd>MarkdownPreviewToggle<cr>",
+          desc = "Toggle Markdown Preview",
+        },
+      },
+      config = function()
+        vim.g.mkdp_auto_start = 0
+        vim.g.mkdp_auto_close = 1
+        vim.g.mkdp_theme = "dark"
+      end,
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Managing Plugins with Lazy.nvim
+
+### Common Lazy.nvim Commands
+
+| Command | Description |
+|---------|-------------|
+| `:Lazy` | Open lazy.nvim UI |
+| `:Lazy sync` | Install missing plugins and update all plugins |
+| `:Lazy install` | Install missing plugins |
+| `:Lazy update` | Update all plugins |
+| `:Lazy clean` | Remove unused plugins |
+| `:Lazy check` | Check for plugin updates |
+| `:Lazy profile` | Show plugin loading times |
+
+### Lazy.nvim UI Shortcuts
+
+When in the `:Lazy` UI, use these keys:
+
+- `I` - Install missing plugins
+- `U` - Update plugins
+- `S` - Sync (install + update + clean)
+- `X` - Clean removed plugins
+- `C` - Check for updates
+- `R` - Restore plugin to lockfile state
+- `?` - Show help
+
+## Plugin Dependencies
+
+If your plugin requires other plugins, specify them in the `dependencies` field:
+
+```lua
+return {
+  "nvim-telescope/telescope.nvim",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    "nvim-tree/nvim-web-devicons",
+  },
+  config = function()
+    -- Configuration
+  end,
+}
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Plugin not loading">
+    1. Check if the plugin file is in `lua/leyland/plugins/`
+    2. Verify the plugin specification syntax is correct
+    3. Run `:Lazy` and check for errors
+    4. Try `:Lazy sync` to reinstall
+  </Accordion>
+
+  <Accordion title="Keybindings not working">
+    1. Ensure the plugin is loaded (not lazy-loaded after the keymap)
+    2. Check for conflicting keybindings with `:Telescope keymaps`
+    3. Verify the keymap is defined after the plugin loads
+  </Accordion>
+
+  <Accordion title="Slow startup time">
+    1. Use `:Lazy profile` to identify slow plugins
+    2. Consider lazy-loading plugins with `event`, `keys`, `cmd`, or `ft`
+    3. Use `lazy = true` for plugins that don't need to load immediately
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+Always check the plugin's official documentation on GitHub for specific configuration options and requirements.
+</Note>

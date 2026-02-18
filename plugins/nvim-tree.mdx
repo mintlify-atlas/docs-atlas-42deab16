@@ -1,0 +1,598 @@
+---
+title: 'nvim-tree'
+description: 'File explorer with tree view and git integration'
+icon: 'folder-tree'
+---
+
+## Overview
+
+[nvim-tree](https://github.com/nvim-tree/nvim-tree.lua) is a file explorer for Neovim with a tree-like view. It provides visual file browsing, git status indicators, and seamless integration with the editor.
+
+<Note>
+nvim-tree is positioned on the right side in nvim-luffy, unlike most configurations that place it on the left. This provides a unique, comfortable browsing experience.
+</Note>
+
+## Installation
+
+From `lua/leyland/plugins/nvim-tree.lua`:
+
+```lua
+return {
+  "nvim-tree/nvim-tree.lua",
+  dependencies = "nvim-tree/nvim-web-devicons",
+  keys = {
+    { "<leader>e", "<cmd>NvimTreeFindFileToggle<cr>", desc = "Toggle file explorer" },
+  },
+}
+```
+
+### Dependencies
+
+- **nvim-web-devicons** - Provides file type icons in the tree
+
+## Configuration
+
+### Disable netrw
+
+```lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+```
+
+Disables Neovim's built-in file explorer to prevent conflicts with nvim-tree.
+
+### Tree Appearance
+
+```lua:lua/leyland/plugins/nvim-tree.lua
+nvimtree.setup({
+  view = {
+    width = 50,
+    relativenumber = true,
+    side = "right",
+  },
+  renderer = {
+    indent_markers = {
+      enable = true,
+    },
+    icons = {
+      glyphs = {
+        folder = {
+          arrow_closed = "",
+          arrow_open = "",
+        },
+      },
+    },
+  },
+})
+```
+
+<Accordion title="Configuration Options Explained">
+- **width: 50** - Tree window is 50 characters wide
+- **relativenumber: true** - Shows relative line numbers for quick navigation
+- **side: "right"** - Unique placement on the right side
+- **indent_markers** - Visual guides showing folder hierarchy
+- **arrow icons** - Custom chevron icons for folders
+</Accordion>
+
+### Git Integration
+
+```lua
+git = {
+  ignore = false,
+}
+```
+
+Shows git-ignored files with different styling (usually dimmed).
+
+### File Filters
+
+```lua
+filters = {
+  custom = { ".DS_Store" },
+}
+```
+
+Hides macOS system files from the tree view.
+
+### Window Behavior
+
+```lua
+actions = {
+  open_file = {
+    window_picker = {
+      enable = false,
+    },
+  },
+}
+```
+
+Disables window picker, files open in the main editing window.
+
+## Keybindings
+
+### Toggle Explorer
+
+| Keybinding | Command | Description |
+|------------|---------|-------------|
+| `<leader>e` | `:NvimTreeFindFileToggle` | Toggle file explorer |
+
+```lua:lua/leyland/plugins/nvim-tree.lua
+keys = {
+  { "<leader>e", "<cmd>NvimTreeFindFileToggle<cr>", desc = "Toggle file explorer" },
+}
+```
+
+<Note>
+`NvimTreeFindFileToggle` not only opens the tree but also reveals and highlights the current file, making it easy to see where you are in the project structure.
+</Note>
+
+### Custom Tree Navigation
+
+Inside nvim-tree window:
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `l` | Open file/folder | Custom: Navigate into folders with `l` |
+| `h` | Close folder | Custom: Go back up with `h` |
+
+```lua:lua/leyland/plugins/nvim-tree.lua
+vim.keymap.set("n", "l", api.node.open.edit, opts("Open"))
+vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("Close Directory"))
+```
+
+<Warning>
+These custom mappings override the default nvim-tree behavior to provide vim-like navigation (h for left/back, l for right/forward).
+</Warning>
+
+### Default nvim-tree Mappings
+
+All default mappings are also available:
+
+<Tabs>
+  <Tab title="File Operations">
+    | Key | Action |
+    |-----|--------|
+    | `<CR>` | Open file |
+    | `o` | Open file |
+    | `<Tab>` | Open file, keep cursor in tree |
+    | `a` | Create new file |
+    | `d` | Delete file |
+    | `r` | Rename file |
+    | `x` | Cut file |
+    | `c` | Copy file |
+    | `p` | Paste file |
+  </Tab>
+  
+  <Tab title="Navigation">
+    | Key | Action |
+    |-----|--------|
+    | `j` | Move down |
+    | `k` | Move up |
+    | `P` | Go to parent directory |
+    | `-` | Go up to parent directory |
+    | `<BS>` | Close directory |
+    | `]` | Next sibling |
+    | `[` | Previous sibling |
+  </Tab>
+  
+  <Tab title="View Options">
+    | Key | Action |
+    |-----|--------|
+    | `R` | Refresh tree |
+    | `H` | Toggle hidden files |
+    | `I` | Toggle git ignored files |
+    | `.` | Change root to cursor directory |
+    | `<C-]>` | CD to directory under cursor |
+  </Tab>
+  
+  <Tab title="Window Control">
+    | Key | Action |
+    |-----|--------|
+    | `<C-v>` | Open in vertical split |
+    | `<C-x>` | Open in horizontal split |
+    | `<C-t>` | Open in new tab |
+    | `q` | Close tree |
+    | `g?` | Show help |
+  </Tab>
+</Tabs>
+
+## Usage Guide
+
+### Opening the Tree
+
+<Steps>
+  <Step title="Toggle Tree">
+    Press `<Space>e` to open nvim-tree
+    
+    ```
+    ┌─────────────────────────┐  ┌──────────────┐
+    │                         │  │   nvim-tree  │
+    │   Your code here        │  │              │
+    │                         │  │   src/       │
+    │                         │  │   ├─ lua/    │
+    │                         │  │   └─ init.lua│
+    └─────────────────────────┘  └──────────────┘
+    ```
+  </Step>
+  
+  <Step title="Navigate to Current File">
+    Tree automatically highlights your current file:
+    
+    ```
+    nvim-tree
+    ─────────────
+      src/
+      ├─ components/
+      ├─ utils/
+      │  └─ helper.ts  ← highlighted
+      └─ App.tsx
+    ```
+  </Step>
+  
+  <Step title="Browse Files">
+    Use `j`/`k` to move, `l` to open folders, `h` to close them
+  </Step>
+  
+  <Step title="Close Tree">
+    Press `<Space>e` again or `q` to close
+  </Step>
+</Steps>
+
+### Creating Files
+
+<Steps>
+  <Step title="Position Cursor">
+    Navigate to the directory where you want to create a file
+  </Step>
+  
+  <Step title="Press 'a' for Add">
+    Type `a` to start creating a new file
+  </Step>
+  
+  <Step title="Enter Filename">
+    Type the filename at the prompt:
+    ```
+    Create new file: components/NewButton.tsx
+    ```
+    
+    <Note>Add a trailing `/` to create a directory instead</Note>
+  </Step>
+  
+  <Step title="Press Enter">
+    File is created and opened in the editor
+  </Step>
+</Steps>
+
+### File Operations
+
+<Accordion title="Renaming Files">
+1. Navigate to file
+2. Press `r`
+3. Edit the name
+4. Press `<Enter>`
+
+```
+Old: Button.tsx
+Press 'r'
+New: IconButton.tsx  ← edit here
+```
+</Accordion>
+
+<Accordion title="Deleting Files">
+1. Navigate to file
+2. Press `d`
+3. Confirm deletion with `y`
+
+<Warning>This permanently deletes files. Use git to recover if needed.</Warning>
+</Accordion>
+
+<Accordion title="Copy/Paste Files">
+1. Navigate to source file
+2. Press `c` to copy (or `x` to cut)
+3. Navigate to destination directory
+4. Press `p` to paste
+
+```
+src/
+  components/
+    Button.tsx      ← copy this (c)
+  pages/
+    (paste here)    ← paste here (p)
+    Button.tsx      ← copied!
+```
+</Accordion>
+
+### Git Status Indicators
+
+nvim-tree shows git status with icons:
+
+```
+nvim-tree
+──────────────────
+  src/
+  ├─ ✓ committed.ts
+  ├─ ✗ modified.ts
+  ├─ ★ staged.ts  
+  ├─ ✚ new.ts
+  └─ ➜ renamed.ts
+```
+
+| Icon | Status |
+|------|--------|
+| `✓` | Committed |
+| `✗` | Modified |
+| `★` | Staged |
+| `✚` | New/Untracked |
+| `➜` | Renamed |
+| `✓` | Clean |
+
+## Advanced Usage
+
+### Changing Root Directory
+
+Change the tree root to focus on a subdirectory:
+
+1. Navigate to the directory
+2. Press `.` to change root
+
+```
+Before:
+  project/
+  ├─ src/
+  │  └─ components/  ← press '.' here
+  └─ tests/
+
+After:
+  components/        ← now the root
+  ├─ Button.tsx
+  └─ Input.tsx
+```
+
+Press `-` to go back up.
+
+### Opening in Splits
+
+Open files in different layouts:
+
+```
+<C-v>  → Vertical split
+<C-x>  → Horizontal split
+<C-t>  → New tab
+```
+
+<CodeGroup>
+```vim Vertical Split
+┌──────────┬──────────┐
+│  file.ts │ tree     │
+│          │          │
+└──────────┴──────────┘
+<C-v> opens left
+```
+
+```vim Horizontal Split
+┌──────────┬──────────┐
+│ file.ts  │ tree     │
+├──────────┤          │
+│ new.ts   │          │
+└──────────┴──────────┘
+<C-x> opens below
+```
+</CodeGroup>
+
+### Toggle Hidden Files
+
+Press `H` to show/hide hidden files:
+
+```
+Without hidden (default):
+  src/
+  └─ components/
+
+With hidden (press H):
+  .git/
+  .gitignore
+  .env
+  src/
+  └─ components/
+```
+
+### Toggle Gitignored Files
+
+Press `I` to show/hide gitignored files:
+
+```lua:lua/leyland/plugins/nvim-tree.lua
+git = {
+  ignore = false,  -- Shows gitignored files by default
+}
+```
+
+Press `I` to toggle visibility of `node_modules/`, `dist/`, etc.
+
+## Integration with Workflow
+
+### With Telescope
+
+Use both together:
+
+```bash
+# Explore project structure
+<Space>e               # Open nvim-tree
+# Browse visually
+
+# Quick file access  
+<Space><Space>         # Use Telescope instead
+# Type filename to find
+```
+
+### With Harpoon
+
+Browse with tree, mark with Harpoon:
+
+```bash
+1. <Space>e            # Open tree
+2. Navigate to file
+3. <Enter> to open
+4. <Space>H            # Harpoon it
+5. <Space>1            # Quick access later
+```
+
+### With LSP
+
+Go to definition, then find in tree:
+
+```bash
+1. gd                  # Go to definition
+2. <Space>e            # Tree shows & highlights current file
+3. See context in project structure
+```
+
+## Visual Features
+
+### Folder Icons
+
+Custom arrow icons for folders:
+
+```
+  src/           ← closed folder
+  components/    ← open folder
+  ├─ Button.tsx
+  └─ Input.tsx
+```
+
+### Indent Markers
+
+```lua:lua/leyland/plugins/nvim-tree.lua
+indent_markers = {
+  enable = true,
+}
+```
+
+Shows vertical lines for hierarchy:
+
+```
+src/
+│
+├─ components/
+│  ├─ Button.tsx
+│  └─ Input.tsx
+│
+└─ utils/
+   └─ helper.ts
+```
+
+### Relative Numbers
+
+```lua
+relativenumber = true,
+```
+
+Use relative numbers for quick navigation:
+
+```
+  3  src/
+  2  ├─ components/
+  1  │  ├─ Button.tsx
+  0  │  └─ Input.tsx      ← cursor here
+  1  └─ utils/
+  2     └─ helper.ts
+
+# Press '2j' to jump to helper.ts
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Tree opens on left instead of right">
+    Check your configuration:
+    
+    ```lua
+    view = {
+      side = "right",  -- Should be "right"
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="No file icons showing">
+    Ensure `nvim-web-devicons` is installed:
+    
+    ```vim
+    :Lazy
+    # Check for nvim-web-devicons
+    ```
+    
+    Also verify your terminal supports icons/fonts.
+  </Accordion>
+  
+  <Accordion title="Tree not highlighting current file">
+    Use `NvimTreeFindFileToggle` instead of `NvimTreeToggle`:
+    
+    ```lua
+    { "<leader>e", "<cmd>NvimTreeFindFileToggle<cr>" }
+    --                     ^^^^^^^^ includes "FindFile"
+    ```
+  </Accordion>
+  
+  <Accordion title="Git status not showing">
+    Ensure you're in a git repository:
+    
+    ```bash
+    git status  # Should show git info
+    ```
+    
+    Also check that git integration is enabled:
+    
+    ```lua
+    git = {
+      ignore = false,
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Tips and Tricks
+
+<Accordion title="Quick Project Overview">
+When joining a new project:
+
+1. `<Space>e` - Open tree
+2. Browse top-level structure
+3. `l` to expand interesting directories
+4. Get a visual mental model quickly
+</Accordion>
+
+<Accordion title="Batch Operations">
+Use visual mode for batch operations:
+
+1. `V` - Enter visual mode
+2. `j`/`k` - Select multiple files
+3. `d` - Delete all selected
+4. Or `x` then `p` to move multiple files
+</Accordion>
+
+<Accordion title="Focus on Subdirectory">
+Working in a specific subdirectory:
+
+1. Navigate to `src/features/auth/`
+2. Press `.` to make it root
+3. Now tree only shows auth files
+4. Reduces visual clutter
+</Accordion>
+
+## Related Plugins
+
+<CardGroup cols={2}>
+  <Card title="Telescope" icon="magnifying-glass" href="/plugins/telescope">
+    Fast file finding by name
+  </Card>
+  
+  <Card title="Harpoon" icon="anchor" href="/plugins/harpoon">
+    Quick navigation to marked files
+  </Card>
+</CardGroup>
+
+## Source Code
+
+View the full configuration:
+```
+lua/leyland/plugins/nvim-tree.lua
+```

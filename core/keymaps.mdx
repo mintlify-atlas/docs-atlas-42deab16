@@ -1,0 +1,125 @@
+---
+title: 'Keymaps'
+description: 'Core keybindings and keyboard shortcuts'
+---
+
+## Overview
+
+The keymaps configuration defines custom keyboard shortcuts that enhance Neovim's default behavior. These keybindings focus on window management and buffer operations.
+
+## Leader Key
+
+The leader key is set to the **spacebar**, which is a common choice for a comfortable and accessible modifier key:
+
+```lua
+vim.g.mapleader = " "
+```
+
+<Note>
+The leader key must be set before defining any keymaps that use it. This is why it's typically placed at the beginning of the configuration.
+</Note>
+
+## Keymap Function
+
+All keymaps use `vim.keymap.set()` for defining shortcuts:
+
+```lua
+vim.keymap.set(mode, keybinding, command, options)
+```
+
+- **mode**: The Vim mode (e.g., "n" for normal, "i" for insert, "v" for visual)
+- **keybinding**: The key combination to trigger the action
+- **command**: The command or action to execute
+- **options**: A table of options, typically including a `desc` (description) field
+
+## Core Keybindings
+
+### Window Management
+
+These keybindings make splitting windows more intuitive:
+
+| Keybinding | Mode | Action | Description |
+|------------|------|--------|-------------|
+| `<leader>\|` | Normal | `<C-w>v` | Split window vertically |
+| `<leader>sh` | Normal | `<C-w>s` | Split window horizontally |
+
+<CodeGroup>
+
+```lua Vertical Split
+keymap.set("n", "<leader>|", "<C-w>v", { desc = "Split window vertically" })
+```
+
+```lua Horizontal Split
+keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })
+```
+
+</CodeGroup>
+
+<Tip>
+The vertical split uses the pipe character `|`, which visually represents a vertical split. Press `Space` + `|` to split vertically.
+</Tip>
+
+### Buffer Management
+
+These shortcuts provide quick access to buffer operations:
+
+| Keybinding | Mode | Action | Description |
+|------------|------|--------|-------------|
+| `<leader>bd` | Normal | `:bd<CR>` | Close current buffer |
+| `<leader>ba` | Normal | `:%bd<CR>` | Close all buffers |
+
+<CodeGroup>
+
+```lua Close Buffer
+keymap.set("n", "<leader>bd", "<cmd>bd<CR>", { desc = "Close buffer" })
+```
+
+```lua Close All Buffers
+keymap.set("n", "<leader>ba", "<cmd>%bd<CR>", { desc = "Close all buffers" })
+```
+
+</CodeGroup>
+
+<Warning>
+`<leader>ba` closes **all** buffers. Use with caution as this will close all open files.
+</Warning>
+
+## Complete Source Code
+
+Here's the full configuration from `lua/leyland/core/keymaps.lua`:
+
+```lua
+vim.g.mapleader = " "
+local keymap = vim.keymap -- for conciseness
+
+-- press jk in insert mode to escape
+-- keymap.set("i", "jk", "<ESC>", {desc = "Exit Insert mode with jk"})
+
+-- press n to remove highlights
+-- keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
+
+-- window management
+keymap.set("n", "<leader>|", "<C-w>v", { desc = "Split window vertically" })
+keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })
+
+keymap.set("n", "<leader>bd", "<cmd>bd<CR>", { desc = "Close buffer" })
+keymap.set("n", "<leader>ba", "<cmd>%bd<CR>", { desc = "Close all buffers" })
+```
+
+<Note>
+Some keymaps are commented out (like `jk` to escape insert mode) but can be enabled by uncommenting them if desired.
+</Note>
+
+## Quick Reference
+
+<AccordionGroup>
+  <Accordion title="Window Splits">
+    - `Space + |` - Split vertically
+    - `Space + sh` - Split horizontally
+  </Accordion>
+  
+  <Accordion title="Buffer Operations">
+    - `Space + bd` - Close current buffer
+    - `Space + ba` - Close all buffers
+  </Accordion>
+</AccordionGroup>

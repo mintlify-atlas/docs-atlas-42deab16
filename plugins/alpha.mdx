@@ -1,0 +1,506 @@
+---
+title: 'Alpha Dashboard'
+description: 'Luffy-themed startup dashboard with quick actions'
+icon: 'house-flag'
+---
+
+## Overview
+
+[Alpha](https://github.com/goolord/alpha-nvim) is a fast and customizable dashboard for Neovim. In nvim-luffy, it features an impressive ASCII art of Luffy from One Piece, along with quick access buttons for common actions.
+
+<Note>
+The Alpha dashboard is the first thing you see when opening Neovim without a file argument. It sets the tone for the entire nvim-luffy experience!
+</Note>
+
+## Installation
+
+From `lua/leyland/plugins/alpha.lua`:
+
+```lua
+return {
+  "goolord/alpha-nvim",
+  event = "VimEnter",
+  config = function()
+    -- Configuration here
+  end,
+}
+```
+
+### Load Timing
+
+```lua
+event = "VimEnter",
+```
+
+Alpha loads on Vim enter, immediately showing the dashboard when starting Neovim.
+
+## The Luffy ASCII Art
+
+The centerpiece of the dashboard is a detailed ASCII art of Luffy:
+
+```lua:lua/leyland/plugins/alpha.lua
+dashboard.section.header.val = {
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⠶⠶⠶⠶⠤⠤⠤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠔⠊⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠷⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  -- ... 32 more lines of Luffy ASCII art
+}
+```
+
+This creates a striking visual when you start Neovim.
+
+## Dashboard Components
+
+The dashboard consists of three main sections:
+
+### 1. Header (Luffy ASCII Art)
+
+Displayed at the top with proper spacing:
+
+```lua
+{ type = "padding", val = 2 },
+dashboard.section.header,
+{ type = "padding", val = 2 },
+```
+
+### 2. Footer (Quote)
+
+A thematic One Piece quote:
+
+```lua:lua/leyland/plugins/alpha.lua
+dashboard.section.footer.val = {
+  "",
+  '"Maybe the One Piece was the commits you made along the way."',
+  "",
+}
+```
+
+<Note>
+This clever twist on a famous One Piece quote reminds you that the journey of coding is what matters!
+</Note>
+
+### 3. Action Buttons
+
+Quick access to common actions:
+
+```lua:lua/leyland/plugins/alpha.lua
+dashboard.section.buttons.val = {
+  dashboard.button("f", "  Find file", ":Telescope find_files <CR>"),
+  dashboard.button("r", "  Recent files", ":Telescope oldfiles <CR>"),
+  dashboard.button("q", "  Quit", ":qa<CR>"),
+}
+```
+
+## Action Buttons
+
+### Available Actions
+
+| Key | Icon | Action | Command |
+|-----|------|--------|---------|
+| `f` | 🔍 | Find file | Opens Telescope file finder |
+| `r` | 📄 | Recent files | Opens Telescope recent files |
+| `q` | 🚪 | Quit | Exits Neovim |
+
+### Using Buttons
+
+From the dashboard:
+
+<Tabs>
+  <Tab title="Find File">
+    Press `f` to open Telescope file finder:
+    
+    ```
+    <Luffy ASCII Art>
+    
+    "Maybe the One Piece was the commits you made along the way."
+    
+      Find file     ← Press 'f'
+      Recent files
+      Quit
+    ```
+    
+    Immediately starts searching for files in your project.
+  </Tab>
+  
+  <Tab title="Recent Files">
+    Press `r` to see recently opened files:
+    
+    ```
+      Find file
+      Recent files  ← Press 'r'
+      Quit
+    ```
+    
+    Shows your file history across all projects.
+  </Tab>
+  
+  <Tab title="Quit">
+    Press `q` to exit Neovim:
+    
+    ```
+      Find file
+      Recent files
+      Quit          ← Press 'q'
+    ```
+    
+    Clean exit from Neovim.
+  </Tab>
+</Tabs>
+
+## Dashboard Layout
+
+The layout is carefully designed for balance:
+
+```lua:lua/leyland/plugins/alpha.lua
+dashboard.config.layout = {
+  { type = "padding", val = 2 },    -- Top spacing
+  dashboard.section.header,         -- Luffy ASCII art
+  { type = "padding", val = 2 },    -- Space after header
+  dashboard.section.footer,         -- Quote
+  { type = "padding", val = 2 },    -- Space before buttons
+  dashboard.section.buttons,        -- Action buttons
+  { type = "padding", val = 1 },    -- Bottom spacing
+}
+```
+
+### Visual Structure
+
+```
+┌─────────────────────────────────────────┐
+│         [2 lines padding]               │
+│                                         │
+│         ┌─────────────────┐            │
+│         │   Luffy ASCII   │            │
+│         │      Art        │            │
+│         │   (32 lines)    │            │
+│         └─────────────────┘            │
+│                                         │
+│         [2 lines padding]               │
+│                                         │
+│   "Maybe the One Piece was the..."     │
+│                                         │
+│         [2 lines padding]               │
+│                                         │
+│         🔍 Find file                   │
+│         📄 Recent files                │
+│         🚪 Quit                        │
+│                                         │
+│         [1 line padding]                │
+└─────────────────────────────────────────┘
+```
+
+## Styling
+
+### Footer Highlight
+
+```lua:lua/leyland/plugins/alpha.lua
+dashboard.section.footer.opts.hl = "Comment"
+```
+
+The quote is styled with the `Comment` highlight group, giving it a subtle appearance.
+
+### Folding Disabled
+
+```lua:lua/leyland/plugins/alpha.lua
+vim.cmd([[autocmd FileType alpha setlocal nofoldenable]])
+```
+
+Disables folding in the alpha buffer to prevent the ASCII art from being folded.
+
+## When Dashboard Appears
+
+The Alpha dashboard shows up in these scenarios:
+
+<Accordion title="Starting Neovim Without Arguments">
+```bash
+nvim
+# Dashboard appears
+```
+</Accordion>
+
+<Accordion title="Closing All Buffers">
+```vim
+:bufdo bd
+# Dashboard reappears
+```
+</Accordion>
+
+<Accordion title="Opening From Directory">
+```bash
+cd project/
+nvim .
+# Dashboard appears (not file tree)
+```
+</Accordion>
+
+### Dashboard Does NOT Appear
+
+When opening specific files:
+
+```bash
+nvim file.ts        # Opens file directly
+nvim file1 file2    # Opens files, no dashboard
+```
+
+## Customization Ideas
+
+### Change the Quote
+
+Edit the footer in `lua/leyland/plugins/alpha.lua`:
+
+```lua
+dashboard.section.footer.val = {
+  "",
+  '"Your custom quote here"',
+  "",
+}
+```
+
+<Accordion title="More One Piece Quotes">
+```lua
+-- Option 1
+'"I\'m gonna be King of the Pirates!"'
+
+-- Option 2  
+'"When do you think people die? When they are shot? No..."'
+
+-- Option 3
+'"Inherited Will, The Destiny of the Age, and The Dreams of the People."'
+
+-- Option 4
+'"Power isn\'t determined by your size, but the size of your heart!"'
+```
+</Accordion>
+
+### Add More Buttons
+
+Add custom buttons for your workflow:
+
+```lua
+dashboard.section.buttons.val = {
+  dashboard.button("f", "  Find file", ":Telescope find_files <CR>"),
+  dashboard.button("r", "  Recent files", ":Telescope oldfiles <CR>"),
+  dashboard.button("n", "  New file", ":ene <BAR> startinsert <CR>"),
+  dashboard.button("g", "  Git status", ":Neogit <CR>"),
+  dashboard.button("c", "  Config", ":e ~/.config/nvim/init.lua <CR>"),
+  dashboard.button("q", "  Quit", ":qa<CR>"),
+}
+```
+
+### Change ASCII Art
+
+Replace the Luffy art with your own:
+
+```lua
+dashboard.section.header.val = {
+  " ███╗   ██╗ ██╗   ██╗ ██╗ ███╗   ███╗",
+  " ████╗  ██║ ██║   ██║ ██║ ████╗ ████║",
+  " ██╔██╗ ██║ ██║   ██║ ██║ ██╔████╔██║",
+  " ██║╚██╗██║ ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║",
+  " ██║ ╚████║  ╚████╔╝  ██║ ██║ ╚═╝ ██║",
+  " ╚═╝  ╚═══╝   ╚═══╝   ╚═╝ ╚═╝     ╚═╝",
+}
+```
+
+<Note>
+Find ASCII art at [ASCII Art Generator](https://patorjk.com/software/taag/) or create your own!
+</Note>
+
+### Adjust Spacing
+
+Modify padding values for tighter/looser layout:
+
+```lua
+dashboard.config.layout = {
+  { type = "padding", val = 1 },    -- Less top spacing
+  dashboard.section.header,
+  { type = "padding", val = 1 },    -- Tighter spacing
+  dashboard.section.footer,
+  { type = "padding", val = 1 },
+  dashboard.section.buttons,
+  { type = "padding", val = 1 },
+}
+```
+
+## Advanced Usage
+
+### Show Git Stats
+
+Add git statistics to the footer:
+
+```lua
+local function get_git_stats()
+  local handle = io.popen('git -C $(pwd) rev-list --count HEAD 2>/dev/null')
+  local commits = handle:read("*a"):gsub("%s+", "")
+  handle:close()
+  
+  if commits ~= "" then
+    return "Total commits: " .. commits
+  end
+  return ""
+end
+
+dashboard.section.footer.val = {
+  "",
+  '"Maybe the One Piece was the commits you made along the way."',
+  get_git_stats(),
+  "",
+}
+```
+
+### Dynamic Button Visibility
+
+Show buttons based on conditions:
+
+```lua
+local buttons = {
+  dashboard.button("f", "  Find file", ":Telescope find_files <CR>"),
+  dashboard.button("r", "  Recent files", ":Telescope oldfiles <CR>"),
+}
+
+-- Add git button only in git repos
+if vim.fn.isdirectory(".git") == 1 then
+  table.insert(buttons, dashboard.button("g", "  Git status", ":Neogit <CR>"))
+end
+
+table.insert(buttons, dashboard.button("q", "  Quit", ":qa<CR>"))
+
+dashboard.section.buttons.val = buttons
+```
+
+### Show Recent Projects
+
+Integrate with project management:
+
+```lua
+dashboard.button("p", "  Projects", ":Telescope projects <CR>")
+```
+
+(Requires telescope-project.nvim plugin)
+
+## Reopening Dashboard
+
+Manually open the dashboard:
+
+```vim
+:Alpha
+```
+
+Useful after closing it or when you want to access quick actions.
+
+## Keybindings
+
+In the dashboard buffer:
+
+| Key | Action |
+|-----|--------|
+| `f` | Find file |
+| `r` | Recent files |
+| `q` | Quit Neovim |
+| `i` | Dismiss dashboard (enter insert mode) |
+| `:e file` | Open file (dismisses dashboard) |
+
+## Performance
+
+Alpha is very lightweight:
+
+- Loads instantly on startup
+- No network requests
+- Pure Lua implementation
+- Minimal impact on startup time (~1-2ms)
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="ASCII art looks broken">
+    Ensure your terminal supports Unicode:
+    
+    ```bash
+    echo $LANG
+    # Should show UTF-8
+    ```
+    
+    Also check terminal font. Use a monospace font that supports Unicode block characters.
+  </Accordion>
+  
+  <Accordion title="Dashboard doesn't appear">
+    Check if Alpha loaded:
+    
+    ```vim
+    :Lazy
+    # Look for alpha-nvim
+    ```
+    
+    Manually trigger:
+    
+    ```vim
+    :Alpha
+    ```
+  </Accordion>
+  
+  <Accordion title="Buttons don't work">
+    Ensure Telescope is installed and working:
+    
+    ```vim
+    :Telescope find_files
+    ```
+    
+    If Telescope has issues, Alpha buttons won't work.
+  </Accordion>
+  
+  <Accordion title="Quote is hard to read">
+    Change the highlight group:
+    
+    ```lua
+    dashboard.section.footer.opts.hl = "String"  -- Try different groups
+    -- Options: Comment, String, Identifier, Type, etc.
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Integration with Theme
+
+Alpha respects your colorscheme:
+
+- Header uses `AlphaHeader` highlight group
+- Buttons use `AlphaButton` highlight group
+- Footer uses configured highlight (default: `Comment`)
+
+Some colorschemes provide custom Alpha colors:
+
+```lua
+-- In your colorscheme config
+vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#7aa2f7" })
+vim.api.nvim_set_hl(0, "AlphaButton", { fg = "#bb9af7" })
+```
+
+## Inspiration
+
+The nvim-luffy dashboard is inspired by:
+
+- One Piece manga/anime
+- The adventure of coding
+- The journey over the destination
+- Pirate-themed development workflow
+
+<Note>
+Just as Luffy pursues the One Piece, we pursue clean code and elegant solutions. The journey matters more than the destination!
+</Note>
+
+## Related Plugins
+
+<CardGroup cols={2}>
+  <Card title="Telescope" icon="magnifying-glass" href="/plugins/telescope">
+    Powers the Find and Recent buttons
+  </Card>
+  
+  <Card title="Colorschemes" icon="palette" href="/plugins/colorschemes">
+    Affects dashboard appearance
+  </Card>
+</CardGroup>
+
+## Source Code
+
+View the full configuration with the complete Luffy ASCII art:
+```
+lua/leyland/plugins/alpha.lua
+```

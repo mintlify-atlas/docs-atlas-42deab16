@@ -1,0 +1,203 @@
+---
+title: Customization Guide
+description: Learn how to customize nvim-luffy to fit your workflow and preferences
+icon: paintbrush
+---
+
+## Overview
+
+nvim-luffy is designed to be easily customizable. This guide will walk you through the most common customizations you might want to make.
+
+## Modifying Core Options
+
+Core Neovim options are configured in `lua/leyland/core/options.lua`. You can modify any of these settings to suit your preferences.
+
+### Common Options to Customize
+
+<AccordionGroup>
+  <Accordion title="Line Numbers and Display">
+    ```lua
+    opt.relativenumber = true    -- Show relative line numbers
+    opt.number = true            -- Show absolute line number on cursor line
+    opt.cmdheight = 0            -- Height of command line
+    opt.laststatus = 0           -- Hide the statusline
+    opt.wrap = false             -- Disable line wrapping
+    ```
+  </Accordion>
+
+  <Accordion title="Indentation and Tabs">
+    ```lua
+    opt.tabstop = 2              -- Number of spaces for a tab
+    opt.shiftwidth = 2           -- Number of spaces for indent width
+    opt.expandtab = true         -- Convert tabs to spaces
+    opt.autoindent = true        -- Copy indent from current line
+    ```
+  </Accordion>
+
+  <Accordion title="Search Settings">
+    ```lua
+    opt.ignorecase = true        -- Case insensitive search
+    opt.smartcase = true         -- Case sensitive if uppercase in search
+    ```
+  </Accordion>
+
+  <Accordion title="Window Behavior">
+    ```lua
+    opt.splitright = true        -- Vertical splits go right
+    opt.splitbelow = true        -- Horizontal splits go below
+    opt.signcolumn = "yes"       -- Always show sign column
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Changing Colorschemes
+
+The colorscheme configuration is located in `lua/leyland/plugins/colorscheme.lua`. By default, nvim-luffy uses the **bamboo** theme.
+
+<Steps>
+  <Step title="View Available Themes">
+    nvim-luffy comes with several pre-installed themes:
+    - `bamboo` (default)
+    - `catppuccin`
+    - `tokyonight`
+    - `modus-themes`
+    - `onedark`
+    - `rose-pine`
+  </Step>
+
+  <Step title="Change the Active Theme">
+    Edit `lua/leyland/plugins/colorscheme.lua` and modify line 37:
+    
+    ```lua
+    config = function()
+      -- Set your default theme here
+      vim.cmd.colorscheme("bamboo")  -- Change this to your preferred theme
+    end,
+    ```
+    
+    For example, to use Catppuccin:
+    
+    ```lua
+    vim.cmd.colorscheme("catppuccin")
+    ```
+  </Step>
+
+  <Step title="Add a New Theme">
+    To add a new colorscheme plugin, add a new entry to the table in `colorscheme.lua`:
+    
+    ```lua
+    {
+      "your-username/your-theme",
+      priority = 1000,
+    },
+    ```
+  </Step>
+</Steps>
+
+<Tip>
+After changing the colorscheme, restart Neovim or run `:source %` to apply the changes.
+</Tip>
+
+## Adjusting Keybindings
+
+Keybindings are configured in multiple locations depending on their purpose:
+
+### Core Keybindings
+
+Edit `lua/leyland/core/keymaps.lua` to modify core keybindings:
+
+```lua lua/leyland/core/keymaps.lua
+vim.g.mapleader = " "  -- Set leader key to space
+
+-- Window management
+keymap.set("n", "<leader>|", "<C-w>v", { desc = "Split window vertically" })
+keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })
+
+-- Buffer management
+keymap.set("n", "<leader>bd", "<cmd>bd<CR>", { desc = "Close buffer" })
+keymap.set("n", "<leader>ba", "<cmd>%bd<CR>", { desc = "Close all buffers" })
+```
+
+### Plugin-Specific Keybindings
+
+Each plugin defines its own keybindings in its configuration file:
+
+- **Telescope**: `lua/leyland/plugins/telescope.lua`
+- **Harpoon**: `lua/leyland/plugins/harpoon.lua`
+- **nvim-tree**: `lua/leyland/plugins/nvim-tree.lua`
+- **LSP**: `lua/leyland/lsp.lua`
+
+### Changing the Leader Key
+
+The leader key is set to `<Space>` by default. To change it, edit the first line of `lua/leyland/core/keymaps.lua`:
+
+```lua
+vim.g.mapleader = ","  -- Change to comma, for example
+```
+
+<Warning>
+Changing the leader key will affect all keybindings that use `<leader>`. Make sure to update your muscle memory!
+</Warning>
+
+## Tips for Personalizing Your Config
+
+<CardGroup cols={2}>
+  <Card title="Start Small" icon="seedling">
+    Make one change at a time and test it thoroughly before moving on to the next customization.
+  </Card>
+  
+  <Card title="Document Your Changes" icon="file-lines">
+    Add comments to explain why you made specific customizations. Your future self will thank you.
+  </Card>
+  
+  <Card title="Use Version Control" icon="code-branch">
+    Keep your configuration in a git repository to track changes and easily revert if needed.
+  </Card>
+  
+  <Card title="Check Plugin Documentation" icon="book">
+    Most plugins have extensive documentation. Use `:help <plugin-name>` or visit their GitHub repository.
+  </Card>
+</CardGroup>
+
+## Advanced Customization
+
+### Custom Autocommands
+
+Create custom autocommands in `lua/leyland/core/options.lua` or create a new file:
+
+```lua
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*",
+  callback = function()
+    -- Trim trailing whitespace on save
+    vim.cmd([[%s/\s\+$//e]])
+  end,
+})
+```
+
+### Custom Commands
+
+Define custom commands for frequently used operations:
+
+```lua
+vim.api.nvim_create_user_command('FormatJson', function()
+  vim.cmd('%!jq .')
+end, {})
+```
+
+### Plugin Configuration
+
+Most plugins expose configuration options through their `opts` table. Check the plugin's documentation for available options:
+
+```lua
+return {
+  "plugin/name",
+  opts = {
+    -- Plugin-specific options here
+  },
+}
+```
+
+<Note>
+For comprehensive keybinding reference, see the [Keybindings Guide](/guides/keybindings).
+</Note>

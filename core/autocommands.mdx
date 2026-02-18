@@ -1,0 +1,131 @@
+---
+title: 'Autocommands'
+description: 'Automatic commands that enhance the editing experience'
+---
+
+## Overview
+
+Autocommands (autocmds) are commands that Neovim executes automatically in response to specific events. The nvim-luffy configuration includes two essential autocommands that improve visual feedback and search behavior.
+
+## What Are Autocommands?
+
+Autocommands use the Neovim API function `vim.api.nvim_create_autocmd()` to register callbacks for specific events:
+
+```lua
+vim.api.nvim_create_autocmd(event, {
+  group = augroup_name,
+  callback = function()
+    -- Action to perform
+  end,
+})
+```
+
+## Configured Autocommands
+
+### 1. Highlight on Yank
+
+<Card title="TextYankPost" icon="highlighter">
+  Briefly highlights text that you've just yanked (copied) to provide visual feedback.
+</Card>
+
+**Why it's useful:** When copying text in Neovim, it can be hard to tell exactly what was copied. This autocommand flashes the yanked text momentarily, giving you immediate visual confirmation.
+
+**Event:** `TextYankPost` - Triggered after text is yanked
+
+**Implementation:**
+
+```lua
+local function augroup(name)
+	return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
+end
+
+-- Highlight on yank
+vim.api.nvim_create_autocmd("TextYankPost", {
+	group = augroup("highlight_yank"),
+	callback = function()
+		(vim.hl or vim.highlight).on_yank()
+	end,
+})
+```
+
+<Info>
+The `(vim.hl or vim.highlight)` syntax ensures compatibility across different Neovim versions, as the API changed in newer releases.
+</Info>
+
+### 2. Auto-Clear Search Highlights
+
+<Card title="CursorMoved" icon="magnifying-glass">
+  Automatically removes search highlights when you move the cursor and no matches exist at the new position.
+</Card>
+
+**Why it's useful:** After searching with `/`, Neovim highlights all matches. This autocommand intelligently clears the highlights when you move to a position without a match, keeping your view clean without requiring manual clearing.
+
+**Event:** `CursorMoved` - Triggered whenever the cursor position changes
+
+**Implementation:**
+
+```lua
+-- Automatically clear search highlights when cursor moves
+vim.api.nvim_create_autocmd("CursorMoved", {
+	group = vim.api.nvim_create_augroup("auto-hlsearch", { clear = true }),
+	callback = function()
+		if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
+			vim.schedule(function()
+				vim.cmd.nohlsearch()
+			end)
+		end
+	end,
+})
+```
+
+**How it works:**
+1. Checks if search highlighting is active (`vim.v.hlsearch == 1`)
+2. Verifies that the cursor is NOT on an exact match (`searchcount().exact_match == 0`)
+3. If both conditions are true, schedules clearing the highlights with `vim.cmd.nohlsearch()`
+
+<Note>
+`vim.schedule()` defers the execution to avoid disrupting the current event loop, preventing potential errors.
+</Note>
+
+## Complete Source Code
+
+Here's the full configuration from `lua/leyland/core/autocommands.lua`:
+
+```lua
+local function augroup(name)
+	return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
+end
+-- Highlight on yank
+vim.api.nvim_create_autocmd("TextYankPost", {
+	group = augroup("highlight_yank"),
+	callback = function()
+		(vim.hl or vim.highlight).on_yank()
+	end,
+})
+
+-- Automatically clear search highlights when cursor moves
+vim.api.nvim_create_autocmd("CursorMoved", {
+	group = vim.api.nvim_create_augroup("auto-hlsearch", { clear = true }),
+	callback = function()
+		if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
+			vim.schedule(function()
+				vim.cmd.nohlsearch()
+			end)
+		end
+	end,
+})
+```
+
+## Augroups Explained
+
+The `augroup()` helper function creates named autocommand groups with `clear = true`, which ensures that autocommands are cleared before being redefined. This prevents duplicate autocommands from being created when reloading the configuration.
+
+```lua
+local function augroup(name)
+	return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
+end
+```
+
+<Tip>
+Grouping related autocommands makes it easier to manage and debug them. You can view all autocommands with `:autocmd`.
+</Tip>

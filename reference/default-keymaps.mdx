@@ -1,0 +1,391 @@
+---
+title: Default Keymaps
+description: Complete keymap reference for nvim-luffy
+icon: keyboard
+---
+
+## Overview
+
+This page documents every keybinding configured in nvim-luffy. The leader key is `<Space>`.
+
+<Note>
+  **Leader Key**: `<Space>`  
+  **Local Leader**: Not configured (defaults to `\\`)
+</Note>
+
+## Quick Reference
+
+<CardGroup cols={3}>
+  <Card title="Leader Key" icon="star">
+    `<Space>`
+  </Card>
+  
+  <Card title="Total Keymaps" icon="hashtag">
+    50+ keybindings
+  </Card>
+  
+  <Card title="Plugin Keymaps" icon="puzzle-piece">
+    Most actions use `<leader>` prefix
+  </Card>
+</CardGroup>
+
+---
+
+## Core Keymaps
+
+### Window Management
+
+Defined in `lua/leyland/core/keymaps.lua`
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<leader>|` | Normal | `<C-w>v` | Split window vertically |
+| `<leader>sh` | Normal | `<C-w>s` | Split window horizontally |
+
+<Tip>
+  Use vim-tmux-navigator's default `<C-h/j/k/l>` keybindings to navigate between splits and tmux panes seamlessly.
+</Tip>
+
+### Buffer Management
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<leader>bd` | Normal | `:bd` | Close current buffer |
+| `<leader>ba` | Normal | `:%bd` | Close all buffers |
+
+---
+
+## LSP Keymaps
+
+These keymaps are available when an LSP server is attached to a buffer.
+
+Defined in `lua/leyland/lsp.lua`
+
+### Navigation
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `gR` | Normal | `:Telescope lsp_references` | Show LSP references |
+| `gd` | Normal | `vim.lsp.buf.definition` | Go to definition |
+| `gi` | Normal | `:Telescope lsp_implementations` | Show LSP implementations |
+| `gt` | Normal | `:Telescope lsp_type_definitions` | Show LSP type definitions |
+| `K` | Normal | `vim.lsp.buf.hover` | Show documentation for symbol under cursor |
+
+### Code Actions
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<leader>ca` | Normal, Visual | `vim.lsp.buf.code_action` | See available code actions |
+| `<leader>rn` | Normal | `vim.lsp.buf.rename` | Smart rename symbol |
+
+### Diagnostics
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<leader>D` | Normal | `:Telescope diagnostics bufnr=0` | Show buffer diagnostics |
+| `<leader>d` | Normal | `vim.diagnostic.open_float` | Show line diagnostics in floating window |
+| `[d` | Normal | `vim.diagnostic.jump(-1)` | Go to previous diagnostic |
+| `]d` | Normal | `vim.diagnostic.jump(1)` | Go to next diagnostic |
+| `<leader>rs` | Normal | `:LspRestart` | Restart LSP server |
+
+<Info>
+  Diagnostics are configured to show errors, warnings, hints, and info with custom icons.
+</Info>
+
+---
+
+## Telescope (Fuzzy Finder)
+
+Defined in `lua/leyland/plugins/telescope.lua`
+
+### File & Content Search
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<leader><leader>` | Normal | `:Telescope find_files` | Fuzzy find files in cwd |
+| `<leader>fr` | Normal | `:Telescope oldfiles` | Fuzzy find recent files |
+| `<leader>/` | Normal | `:Telescope live_grep` | Find string in cwd (live grep) |
+| `<leader>fc` | Normal | `:Telescope grep_string` | Find string under cursor in cwd |
+| `<leader>ft` | Normal | `:TodoTelescope` | Find TODO comments |
+| `<leader>fk` | Normal | `:Telescope keymaps` | Find keymaps |
+
+### Telescope Insert Mode
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<C-k>` | Insert | Move selection previous | Navigate to previous result |
+| `<C-j>` | Insert | Move selection next | Navigate to next result |
+| `<C-q>` | Insert | Send to quickfix | Send selected items to quickfix list |
+
+---
+
+## Harpoon (File Marks)
+
+Defined in `lua/leyland/plugins/harpoon.lua`
+
+### Mark Management
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<leader>H` | Normal | `harpoon:list():add()` | Add current file to harpoon |
+| `<leader>h` | Normal | `harpoon.ui:toggle_quick_menu()` | Toggle harpoon quick menu |
+
+### Quick Jump to Marks
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<leader>1` | Normal | `harpoon:list():select(1)` | Jump to harpoon file 1 |
+| `<leader>2` | Normal | `harpoon:list():select(2)` | Jump to harpoon file 2 |
+| `<leader>3` | Normal | `harpoon:list():select(3)` | Jump to harpoon file 3 |
+| `<leader>4` | Normal | `harpoon:list():select(4)` | Jump to harpoon file 4 |
+| `<leader>5` | Normal | `harpoon:list():select(5)` | Jump to harpoon file 5 |
+| `<leader>6` | Normal | `harpoon:list():select(6)` | Jump to harpoon file 6 |
+| `<leader>7` | Normal | `harpoon:list():select(7)` | Jump to harpoon file 7 |
+| `<leader>8` | Normal | `harpoon:list():select(8)` | Jump to harpoon file 8 |
+| `<leader>9` | Normal | `harpoon:list():select(9)` | Jump to harpoon file 9 |
+
+<Tip>
+  Harpoon is perfect for quickly jumping between frequently edited files in a project.
+</Tip>
+
+---
+
+## File Explorer (nvim-tree)
+
+Defined in `lua/leyland/plugins/nvim-tree.lua`
+
+### Toggle Explorer
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<leader>e` | Normal | `:NvimTreeFindFileToggle` | Toggle file explorer on current file |
+
+### nvim-tree Buffer Keymaps
+
+These keymaps only work inside the nvim-tree buffer:
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `l` | Normal | Open file/folder | Open file or expand directory |
+| `h` | Normal | Close directory | Collapse directory |
+
+<Info>
+  nvim-tree includes many default keymaps. Press `g?` inside nvim-tree to see all available mappings.
+</Info>
+
+---
+
+## Flash (Motion)
+
+Defined in `lua/leyland/plugins/flash.lua`
+
+### Jump Commands
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `s` | Normal, Visual, Operator | `flash.jump()` | Flash jump to location |
+| `S` | Normal, Visual, Operator | `flash.treesitter()` | Flash treesitter selection |
+| `r` | Operator | `flash.remote()` | Remote flash operation |
+| `R` | Visual, Operator | `flash.treesitter_search()` | Treesitter search with flash |
+| `<C-s>` | Command | `flash.toggle()` | Toggle flash search in command mode |
+
+### Incremental Selection
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<C-space>` | Normal, Visual, Operator | Flash treesitter incremental | Expand treesitter selection |
+| `<BS>` | Inside Flash | Previous selection | Shrink selection (backspace) |
+
+### Flash Char Motion
+
+| Keymap | Context | Action | Description |
+|--------|---------|--------|-------------|
+| `;` | After char motion | Next match | Jump to next occurrence |
+| `,` | After char motion | Previous match | Jump to previous occurrence |
+
+---
+
+## Git Integration
+
+### Neogit
+
+Defined in `lua/leyland/plugins/neogit.lua`
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<leader>gg` | Normal | `:Neogit (floating)` | Open Neogit in floating window |
+
+### Diffview
+
+Defined in `lua/leyland/plugins/diffview.lua`
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<leader>dd` | Normal | `:DiffviewOpen` | Open diff view |
+| `<leader>df` | Normal | `:DiffviewClose` | Close diff view |
+| `<leader>ds` | Normal | `:DiffviewOpen origin/main...HEAD` | Open branch diff against main |
+
+---
+
+## Completion (nvim-cmp)
+
+Defined in `lua/leyland/plugins/nvim-cmp.lua`
+
+### Insert Mode Completion
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<C-k>` | Insert | Select previous | Previous completion item |
+| `<C-j>` | Insert | Select next | Next completion item |
+| `<C-b>` | Insert | Scroll docs up | Scroll documentation up |
+| `<C-f>` | Insert | Scroll docs down | Scroll documentation down |
+| `<C-Space>` | Insert | Trigger completion | Show completion suggestions |
+| `<C-e>` | Insert | Abort completion | Close completion window |
+| `<CR>` | Insert | Confirm | Confirm selected completion |
+| `<Tab>` | Insert | Next/expand | Select next item or expand snippet |
+
+<Note>
+  `<Tab>` intelligently chooses between selecting the next completion item and expanding/jumping in snippets.
+</Note>
+
+---
+
+## Formatting
+
+Defined in `lua/leyland/plugins/formatting.lua`
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<leader>mp` | Normal, Visual | `conform.format()` | Format file or range |
+
+<Info>
+  Format-on-save is enabled by default with a 3-second timeout.
+</Info>
+
+---
+
+## Diagnostics (Trouble)
+
+Defined in `lua/leyland/plugins/trouble.lua`
+
+| Keymap | Mode | Action | Description |
+|--------|------|--------|-------------|
+| `<leader>xx` | Normal | `:Trouble diagnostics toggle` | Toggle Trouble diagnostics window |
+
+---
+
+## Keymap Categories Summary
+
+<AccordionGroup>
+  <Accordion title="Core Keymaps (4)">
+    - Window management: 2 keymaps
+    - Buffer management: 2 keymaps
+  </Accordion>
+  
+  <Accordion title="LSP Keymaps (12)">
+    - Navigation: 5 keymaps
+    - Code actions: 2 keymaps
+    - Diagnostics: 5 keymaps
+  </Accordion>
+  
+  <Accordion title="Telescope (9)">
+    - File/content search: 6 keymaps
+    - Insert mode navigation: 3 keymaps
+  </Accordion>
+  
+  <Accordion title="Harpoon (11)">
+    - Mark management: 2 keymaps
+    - Quick jumps: 9 keymaps (1-9)
+  </Accordion>
+  
+  <Accordion title="File Explorer (3)">
+    - Toggle: 1 keymap
+    - Buffer-local: 2 keymaps
+  </Accordion>
+  
+  <Accordion title="Flash Motion (7)">
+    - Jump commands: 5 keymaps
+    - Incremental selection: 2 keymaps
+  </Accordion>
+  
+  <Accordion title="Git (4)">
+    - Neogit: 1 keymap
+    - Diffview: 3 keymaps
+  </Accordion>
+  
+  <Accordion title="Completion (8)">
+    - All in insert mode
+  </Accordion>
+  
+  <Accordion title="Formatting (1)">
+    - Format command: 1 keymap
+  </Accordion>
+  
+  <Accordion title="Trouble (1)">
+    - Toggle diagnostics: 1 keymap
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Finding Keymaps
+
+### Built-in Ways to Discover Keymaps
+
+<CodeGroup>
+```vim Telescope Keymaps
+<leader>fk
+" or
+:Telescope keymaps
+```
+
+```vim Vim Help
+:map
+:nmap
+:imap
+:vmap
+```
+
+```vim Which-key (if installed)
+<leader>
+" Wait for which-key popup
+```
+</CodeGroup>
+
+<Tip>
+  Use `<leader>fk` to search all configured keymaps interactively with Telescope.
+</Tip>
+
+---
+
+## Customizing Keymaps
+
+### Add Global Keymap
+
+Edit `lua/leyland/core/keymaps.lua`:
+
+```lua
+vim.keymap.set("n", "<leader>custom", "<cmd>Command<CR>", { desc = "My custom action" })
+```
+
+### Add Plugin-Specific Keymap
+
+Edit the plugin file in `lua/leyland/plugins/`:
+
+```lua
+keys = {
+  { "<leader>x", "<cmd>PluginCommand<CR>", desc = "Plugin action" },
+}
+```
+
+### Disable a Keymap
+
+Set it to no-op:
+
+```lua
+vim.keymap.set("n", "<leader>unwanted", "<Nop>", { desc = "Disabled" })
+```
+
+<Warning>
+  Be careful when overriding default Vim keybindings - you might lose important functionality.
+</Warning>

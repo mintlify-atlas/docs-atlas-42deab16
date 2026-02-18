@@ -1,0 +1,96 @@
+---
+title: 'LSP Overview'
+description: 'Understanding LSP integration in nvim-luffy'
+icon: 'lightbulb'
+---
+
+## What is LSP?
+
+The Language Server Protocol (LSP) is a standardized protocol between editors and language servers that provide language-specific features like:
+
+<CardGroup cols={2}>
+  <Card title="Code Intelligence" icon="brain">
+    Autocompletion, go-to-definition, and find references
+  </Card>
+  <Card title="Diagnostics" icon="circle-exclamation">
+    Real-time error detection and warnings
+  </Card>
+  <Card title="Code Actions" icon="wand-magic-sparkles">
+    Quick fixes, refactoring, and code improvements
+  </Card>
+  <Card title="Documentation" icon="book">
+    Hover information and signature help
+  </Card>
+</CardGroup>
+
+## Why LSP Matters
+
+LSP revolutionizes code editing by:
+
+- **Consistency**: Same language features across different editors
+- **Efficiency**: Language servers work independently from the editor
+- **Modern Development**: Support for modern language features and tooling
+- **Cross-Language**: Single protocol for multiple programming languages
+
+## How nvim-luffy Integrates LSP
+
+nvim-luffy provides a complete LSP setup out of the box:
+
+<Steps>
+  <Step title="Automatic Installation">
+    Language servers are automatically installed via [Mason](/lsp/mason)
+  </Step>
+  <Step title="Smart Configuration">
+    Servers are configured with sensible defaults and enhanced capabilities
+  </Step>
+  <Step title="Completion Integration">
+    LSP integrates seamlessly with [nvim-cmp](/lsp/completion) for autocompletion
+  </Step>
+  <Step title="File Operations">
+    Support for advanced file operations and workspace management
+  </Step>
+</Steps>
+
+## Available Language Servers
+
+nvim-luffy comes pre-configured with language servers for popular languages:
+
+<AccordionGroup>
+  <Accordion title="Web Development">
+    - **ts_ls** - TypeScript and JavaScript
+    - **html** - HTML
+    - **cssls** - CSS, SCSS, and Less
+    - **tailwindcss** - Tailwind CSS
+    - **svelte** - Svelte framework
+    - **emmet_ls** - Emmet abbreviations
+  </Accordion>
+
+  <Accordion title="Backend & Databases">
+    - **graphql** - GraphQL queries and schemas
+    - **prismals** - Prisma ORM
+    - **pyright** - Python type checking
+  </Accordion>
+
+  <Accordion title="Configuration & Scripting">
+    - **lua_ls** - Lua with Neovim API support
+    - **eslint** - JavaScript/TypeScript linting
+  </Accordion>
+</AccordionGroup>
+
+<Tip>
+  All language servers are automatically installed when you first open a file of the corresponding type. No manual setup required!
+</Tip>
+
+## Next Steps
+
+<CardGroup cols={3}>
+  <Card title="Mason" icon="box" href="/lsp/mason">
+    Learn about language server installation
+  </Card>
+  <Card title="Configuration" icon="gear" href="/lsp/configuration">
+    Understand LSP configuration details
+  </Card>
+  <Card title="Completion" icon="keyboard" href="/lsp/completion">
+    Master the completion system
+  </Card>
+</CardGroup>
