@@ -193,6 +193,85 @@ As you type in insert mode, nvim-cmp will automatically show completion suggesti
   Completion suggestions come from multiple sources: LSP, snippets, buffer words, and file paths. LSP suggestions are the most intelligent, providing context-aware completions.
 </Tip>
 
+### LSP Features
+
+nvim-luffy includes powerful LSP (Language Server Protocol) features for intelligent code navigation and editing.
+
+#### Code Navigation
+
+| Keybinding | Action |
+|------------|---------|
+| `gd` | Go to definition |
+| `gR` | Show all references (Telescope) |
+| `gi` | Go to implementation |
+| `gt` | Go to type definition |
+| `K` | Show documentation hover |
+
+**Example workflow:**
+```
+1. Place cursor on a function call
+2. Press gd to jump to its definition
+3. Press Ctrl+o to jump back
+4. Press gR to see all places where it's used
+```
+
+#### Diagnostics & Errors
+
+| Keybinding | Action |
+|------------|---------|
+| `<leader>d` | Show diagnostics for current line |
+| `<leader>D` | Show all buffer diagnostics (Telescope) |
+| `[d` | Go to previous diagnostic |
+| `]d` | Go to next diagnostic |
+
+<Tip>
+  Diagnostics appear automatically as you type. Error and warning signs show in the sign column, and you can see the full message by pressing `<leader>d`.
+</Tip>
+
+#### Code Actions & Refactoring
+
+| Keybinding | Action |
+|------------|---------|
+| `<leader>ca` | Show code actions |
+| `<leader>rn` | Rename symbol |
+| `<leader>rs` | Restart LSP server |
+
+**Rename example:**
+<Steps>
+  <Step title="Position cursor">
+    Place your cursor on a variable, function, or class name
+  </Step>
+  
+  <Step title="Trigger rename">
+    Press `<leader>rn` to start renaming
+  </Step>
+  
+  <Step title="Type new name">
+    Type the new name and press Enter. All references will be updated automatically!
+  </Step>
+</Steps>
+
+### Flash Motion
+
+Flash provides lightning-fast navigation within a file using labeled jumps.
+
+| Keybinding | Action |
+|------------|---------|
+| `s` | Flash jump - jump to any visible location |
+| `S` | Flash Treesitter - jump to syntax nodes |
+| `<Ctrl-Space>` | Incremental selection (expand with treesitter) |
+
+**Quick example:**
+```
+1. Press s to activate Flash
+2. Type the first 1-2 characters of where you want to go
+3. Flash shows labels - type the label to jump instantly
+```
+
+<Tip>
+  Flash is perfect for quick within-file navigation. Use `S` to jump by code structure (functions, classes, blocks).
+</Tip>
+
 ### Git Integration
 
 #### Neogit - Git Interface
@@ -324,6 +403,6 @@ Now that you know the basics, explore these topics:
 - **Advanced Telescope** - Master advanced search patterns and filters
 - **Git Workflows** - Deep dive into Neogit and Diffview for git mastery
 
-Refer to the [Keybindings Reference](/reference/keybindings) for a complete list of all available shortcuts.
+Refer to the [Keybindings Reference](/guides/keybindings) for a complete list of all available shortcuts.
 
 Happy coding! 🚀

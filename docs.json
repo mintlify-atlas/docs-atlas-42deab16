@@ -46,6 +46,7 @@
               "plugins/telescope",
               "plugins/harpoon",
               "plugins/nvim-tree",
+              "plugins/flash",
               "plugins/treesitter",
               "plugins/alpha",
               "plugins/colorschemes"

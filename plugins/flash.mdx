@@ -1,0 +1,195 @@
+---
+title: Flash Motion
+description: Enhanced motion and jump plugin for ultra-fast navigation
+---
+
+# Flash.nvim - Enhanced Motion
+
+Flash is a powerful motion plugin that makes navigating code blazingly fast. It enhances Vim's built-in jump commands with visual labels, treesitter integration, and smart search capabilities.
+
+## What is Flash?
+
+Flash provides labeled jumps that let you move to any visible location with just a few keystrokes. Instead of counting or repeating motions, you type a trigger key and Flash shows labels at all possible jump locations.
+
+## Features
+
+<CardGroup cols={2}>
+  <Card title="Label-based Jumps" icon="tags">
+    Jump to any visible location by typing a few characters and following labels
+  </Card>
+  
+  <Card title="Treesitter Integration" icon="code-branch">
+    Navigate by syntax nodes - functions, classes, blocks, and more
+  </Card>
+  
+  <Card title="Remote Operations" icon="satellite-dish">
+    Perform operations (delete, change, yank) on remote locations without moving
+  </Card>
+  
+  <Card title="Search Integration" icon="magnifying-glass">
+    Enhanced search with labels for quick navigation
+  </Card>
+</CardGroup>
+
+## Configuration
+
+Flash is configured in `lua/leyland/plugins/flash.lua:1`:
+
+```lua
+return {
+  "folke/flash.nvim",
+  event = "VeryLazy",
+  vscode = true,
+  opts = {
+    modes = {
+      char = {
+        char_actions = function(motion)
+          return {
+            [";"] = "next",
+            [","] = "prev",
+          }
+        end,
+      },
+    },
+  },
+  keys = {
+    { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+    { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+    { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+    { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+    { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+    { "<c-space>", mode = { "n", "o", "x" },
+      function()
+        require("flash").treesitter({
+          actions = {
+            ["<c-space>"] = "next",
+            ["<BS>"] = "prev"
+          }
+        }) 
+      end, desc = "Treesitter Incremental Selection" },
+  },
+}
+```
+
+## Keybindings
+
+### Basic Flash Jump
+| Key | Mode | Action | Description |
+|-----|------|--------|-------------|
+| `s` | n, x, o | Flash jump | Jump to any location with labels |
+| `S` | n, o, x | Flash Treesitter | Jump to syntax nodes |
+
+### Remote Operations
+| Key | Mode | Action | Description |
+|-----|------|--------|-------------|
+| `r` | o | Remote Flash | Operate on remote location without moving |
+| `R` | o, x | Treesitter Search | Search by treesitter nodes |
+
+### Search Integration
+| Key | Mode | Action | Description |
+|-----|------|--------|-------------|
+| `<Ctrl-s>` | c | Toggle Flash | Enable/disable Flash in search |
+| `<Ctrl-Space>` | n, o, x | Incremental Selection | Expand selection with treesitter |
+
+### Character Actions
+| Key | Mode | Action | Description |
+|-----|------|--------|-------------|
+| `;` | n | Next match | Jump to next character match |
+| `,` | n | Previous match | Jump to previous character match |
+
+## Usage Examples
+
+### Basic Flash Jump
+
+<Steps>
+  <Step title="Trigger Flash">
+    Press `s` in normal mode to activate Flash jump mode
+  </Step>
+  
+  <Step title="Type target characters">
+    Type the first 1-2 characters of where you want to go
+  </Step>
+  
+  <Step title="Follow the label">
+    Flash shows labels at all matching locations. Type the label to jump instantly
+  </Step>
+</Steps>
+
+### Treesitter Navigation
+
+Press `S` to jump to semantic elements like functions, classes, or blocks. Flash uses treesitter to understand code structure and show you meaningful jump targets.
+
+```lua
+-- Example: Jump to a function definition
+-- Press S, then select the label near "setup"
+require("telescope").setup({
+  defaults = {
+    -- configuration
+  }
+})
+```
+
+### Remote Operations
+
+Remote Flash lets you perform operations without moving your cursor:
+
+<Tabs>
+  <Tab title="Delete">
+    `dr` - Delete remote: Press `dr`, type target, press label to delete
+  </Tab>
+  
+  <Tab title="Change">
+    `cr` - Change remote: Press `cr`, type target, press label to change
+  </Tab>
+  
+  <Tab title="Yank">
+    `yr` - Yank remote: Press `yr`, type target, press label to yank
+  </Tab>
+</Tabs>
+
+### Incremental Selection
+
+Press `<Ctrl-Space>` to start treesitter-based incremental selection:
+- `<Ctrl-Space>` - Expand selection to next node
+- `<Backspace>` - Shrink selection to previous node
+
+## Tips
+
+<Tip>
+Flash works with all Vim operators. Try `ds` (delete with flash), `cs` (change with flash), or `ys` (surround with flash if vim-surround is installed).
+</Tip>
+
+<Note>
+The `s` key is remapped from Vim's default substitute command. Use `cl` or `xi` for single-character substitution instead.
+</Note>
+
+<Info>
+Flash is lazy-loaded on `VeryLazy` event, so it doesn't impact startup time.
+</Info>
+
+## Integration with Other Plugins
+
+Flash works seamlessly with:
+- **Treesitter** - Semantic navigation by syntax nodes
+- **Search** - Enhanced search with labels (`<Ctrl-s>` in command mode)
+- **VSCode** - Compatible with VSCode Neovim extension
+
+## Troubleshooting
+
+<Accordion title="Flash labels not showing">
+  Make sure Treesitter is properly installed for your filetype. Run `:TSInstallInfo` to check parser status.
+</Accordion>
+
+<Accordion title="Conflicts with other s/S mappings">
+  If you have plugins that use `s` or `S`, you can remap Flash in the keys configuration. Consider using `<leader>s` instead.
+</Accordion>
+
+<Accordion title="Slow on large files">
+  Flash calculates jump positions in real-time. For very large files (10,000+ lines), there may be a slight delay. This is normal and Flash is still faster than alternative methods.
+</Accordion>
+
+## Related Documentation
+
+- [Telescope](/plugins/telescope) - For file and text search
+- [Treesitter](/plugins/treesitter) - For syntax understanding
+- [Harpoon](/plugins/harpoon) - For file-level navigation
